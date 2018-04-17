@@ -13,6 +13,8 @@ namespace Helpful.Framework
         public bool RunningAsBeta { get; set; } = false;
         /// <summary>Whether the bot should be sharded</summary>
         public bool ShouldShard { get; set; } = false;
+        /// <summary>The default prefix of the bot</summary>
+        public string Prefix { get; set; } = "!";
         /// <summary>The <see cref="CommandServiceConfig"/> to use</summary>
         public CommandServiceConfig CommandServiceConfig { get; set; } = new CommandServiceConfig();
         /// <summary>An optional path to the database.</summary>

@@ -1,11 +1,12 @@
-﻿using Helpful.Framework.Utils;
+﻿using Discord;
+using Helpful.Framework.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Helpful.Framework.Config
 {
     /// <summary>Represents a configuration manager</summary>
-    public interface IConfig<TGuild, TUser> : IService
+    public interface IConfig<TGuild, TUser>
         where TGuild : IConfigGuild where TUser : IConfigUser
     {
         /// <summary>Provides a mapping of guild ID to the corresponding config object.</summary>
@@ -23,5 +24,10 @@ namespace Helpful.Framework.Config
         /// <summary>Asynchronously writes to the database</summary>
         /// <param name="type">The database type to write</param>
         Task<ResultOperation> WriteAsync(DatabaseType type);
+
+        /// <summary>Creates a <typeparamref name="TGuild"/> based off the specified <see cref="IGuild"/></summary>
+        Task<TGuild> Create(IGuild guild);
+        /// <summary>Creates a <typeparamref name="TUser"/> based off the specified <see cref="IUser"/></summary>
+        Task<TUser> Create(IUser user);
     }
 }

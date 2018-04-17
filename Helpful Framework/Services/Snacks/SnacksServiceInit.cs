@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Helpful.Framework.Services
 {
-    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService
-        where TConfig : IConfig<TGuild, TUser>
-        where TGuild : IConfigGuild, ISnacksGuild
-        where TUser : IConfigUser, ISnacksUser<TEnum>
+    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService<TConfig, TGuild, TUser>
+        where TConfig : class, IConfig<TGuild, TUser>
+        where TGuild : class, IConfigGuild, ISnacksGuild
+        where TUser : class, IConfigUser, ISnacksUser<TEnum>
         where TEnum : struct, IComparable, IConvertible, IFormattable
     {
         /// <summary>A map of the snack type to the snacks name.</summary>

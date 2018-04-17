@@ -7,10 +7,10 @@ using Reputations = System.Collections.Generic.Dictionary<ulong, System.DateTime
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for reputation commands</summary>
-    public class ReputationService<TConfig, TGuild, TUser> : IService
-        where TConfig : IConfig<TGuild, TUser>
-        where TGuild : IConfigGuild
-        where TUser : IConfigUser, IReputation
+    public class ReputationService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
+        where TConfig : class, IConfig<TGuild, TUser>
+        where TGuild : class, IConfigGuild
+        where TUser : class, IConfigUser, IReputation
     {
         /// <summary>The configuration object to use</summary>
         protected TConfig Config { get; }
@@ -109,8 +109,8 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot bot) => true;
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => true;
         /// <inheritdoc />
-        public Task Disconnect(FrameworkBot bot) => Task.CompletedTask;
+        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => Task.CompletedTask;
     }
 }

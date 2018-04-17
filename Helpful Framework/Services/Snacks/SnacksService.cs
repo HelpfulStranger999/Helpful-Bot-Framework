@@ -12,16 +12,16 @@ namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for snacktime.</summary>
     /// <remarks><typeparamref name="TEnum"/> must be an enum. <typeparamref name="TGuild"/> must </remarks>
-    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService
-        where TConfig : IConfig<TGuild, TUser>
-        where TGuild : IConfigGuild, ISnacksGuild
-        where TUser : IConfigUser, ISnacksUser<TEnum>
+    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService<TConfig, TGuild, TUser>
+        where TConfig : class, IConfig<TGuild, TUser>
+        where TGuild : class, IConfigGuild, ISnacksGuild
+        where TUser : class, IConfigUser, ISnacksUser<TEnum>
         where TEnum : struct, IComparable, IConvertible, IFormattable
     {
         /// <summary>Whether this service is shutting down.</summary>
         protected bool Disconnecting => Bot != null;
-        /// <summary>The <see cref="FrameworkBot"/> for this service. Non-null only when shutting down.</summary>
-        protected FrameworkBot Bot { get; set; } = null;
+        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser}"/> for this service. Non-null only when shutting down.</summary>
+        protected FrameworkBot<TConfig, TGuild, TUser> Bot { get; set; } = null;
         /// <summary>A random number generator for generating values.</summary>
         protected AdvancedRandom Random { get; set; } = new AdvancedRandom();
 
@@ -109,14 +109,14 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot bot)
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
             Bot = bot;
             return Managers.LongCount(m => m.Value.IsActive) <= 0;
         }
 
         /// <inheritdoc />
-        public async Task Disconnect(FrameworkBot bot)
+        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
             foreach (var channel in Managers.Keys)
             {

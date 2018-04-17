@@ -10,7 +10,7 @@ using Spawner = System.Collections.Concurrent.ConcurrentDictionary<ulong, Helpfu
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for spawning creatures</summary>
-    public class CreatureSpawnerService<TConfig, TGuild, TUser> : IService
+    public class CreatureSpawnerService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISpawnerGuild
         where TUser : class, IConfigUser, ISpawnerUser
@@ -21,8 +21,8 @@ namespace Helpful.Framework.Services
 
         /// <summary>Whether this service is shutting down.</summary>
         protected bool Disconnecting => Bot != null;
-        /// <summary>The <see cref="FrameworkBot"/> for this service. Non-null only when shutting down.</summary>
-        protected FrameworkBot Bot { get; set; } = null;
+        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser}"/> for this service. Non-null only when shutting down.</summary>
+        protected FrameworkBot<TConfig, TGuild, TUser> Bot { get; set; } = null;
         /// <summary>A random number generator for generating values.</summary>
         protected AdvancedRandom Random { get; set; } = new AdvancedRandom();
         /// <summary>A mapping of channel ID to creature manager</summary>
@@ -75,14 +75,14 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot bot)
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
             Bot = bot;
             return Spawner.LongCount() <= 0;
         }
 
         /// <inheritdoc />
-        public Task Disconnect(FrameworkBot bot)
+        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
             Spawner.Clear();
             return Task.CompletedTask;

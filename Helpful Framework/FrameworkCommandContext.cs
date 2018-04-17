@@ -3,7 +3,7 @@ using Discord.Commands;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Helpful.Commands
+namespace Helpful.Framework
 {
     /// <summary>Provides an extended command context base.</summary>
     public abstract class FrameworkCommandContext<TClient> : ICommandContext

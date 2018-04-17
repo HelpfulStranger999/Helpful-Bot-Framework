@@ -1,10 +1,14 @@
 ﻿using Discord.WebSocket;
+using Helpful.Framework.Config;
 using System;
 using System.Threading.Tasks;
 
 namespace Helpful.Framework
 {
-    public abstract partial class FrameworkBot
+    public abstract partial class FrameworkBot<TConfig, TGuild, TUser>
+        where TConfig : class, IConfig<TGuild, TUser>
+        where TGuild : class, IConfigGuild
+        where TUser : class, IConfigUser
     {
         /// <summary>Fired when a new console line is sent</summary>
         public event Func<string, Task> ConsoleInput;
