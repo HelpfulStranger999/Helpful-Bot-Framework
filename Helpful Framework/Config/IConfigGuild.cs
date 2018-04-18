@@ -4,7 +4,7 @@
     public interface IConfigGuild
     {
         /// <summary>The ID of this guild</summary>
-        ulong Id { get; set; }
+        ulong Id { get; }
         /// <summary>The prefix of this guild</summary>
         string Prefix { get; set; }
     }
