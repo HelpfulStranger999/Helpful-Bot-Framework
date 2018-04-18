@@ -50,7 +50,8 @@ namespace Helpful.Framework
         public abstract Task StopAsync(bool graceful = true, TimeSpan? timeout = null);
         /// <summary>Restarts the bot</summary>
         /// <param name="graceful">Whether the bot should gracefully restart or not.</param>
-        public abstract Task RestartAsync(bool graceful = true);
+        /// <param name="timeout">How long to wait before the bot proceeds</param>
+        public abstract Task RestartAsync(bool graceful = true, TimeSpan? timeout = null);
 
         /// <summary>Loads the bot</summary>
         public abstract Task LoadAsync();
@@ -60,7 +61,7 @@ namespace Helpful.Framework
         /// <summary>Constructs a context given a <see cref="IUserMessage"/></summary>
         public abstract ICommandContext CreateContext(IUserMessage message);
         /// <summary>Handles the result of a listener of command operation</summary>
-        public abstract Task HandleResult(ICommandContext context, IResult result);
+        public abstract Task HandleResult(ICommandContext context, IResult result, bool command = true);
 
         /// <summary>
         /// Framework loading of the bot, to be called in <see cref="LoadAsync"/>
@@ -214,13 +215,13 @@ namespace Helpful.Framework
 
                 if (message.HasPrefix(prefix, SocketClient, ref pos))
                 {
-                    HandleResult(context, await CommandService.ExecuteAsync(context, pos, ServiceProvider));
+                    await HandleResult(context, await CommandService.ExecuteAsync(context, pos, ServiceProvider));
                 }
                 else
                 {
                     foreach (var result in await ListenerService.ExecuteAsync(context, ServiceProvider))
                     {
-                        HandleResult(context, result);
+                        await HandleResult(context, result, false);
                     }
                 }
             }
