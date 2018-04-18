@@ -60,7 +60,7 @@ namespace Helpful.Framework
         /// <summary>Constructs a context given a <see cref="IUserMessage"/></summary>
         public abstract ICommandContext CreateContext(IUserMessage message);
         /// <summary>Handles the result of a listener of command operation</summary>
-        public abstract void HandleResult(ICommandContext context, IResult result);
+        public abstract Task HandleResult(ICommandContext context, IResult result);
 
         /// <summary>
         /// Framework loading of the bot, to be called in <see cref="LoadAsync"/>
