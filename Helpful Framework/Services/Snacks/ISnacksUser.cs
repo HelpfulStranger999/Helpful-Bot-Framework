@@ -8,6 +8,6 @@ namespace Helpful.Framework.Config
     public interface ISnacksUser<TEnum> : IConfigUser where TEnum : struct, IConvertible, IComparable, IFormattable
     {
         /// <summary>Maps each of the snack types defined in <typeparamref name="TEnum"/> to an ulong.</summary>
-        IDictionary<TEnum, ulong> Snacks { get; set; }
+        IDictionary<TEnum, ulong> Snacks { get; }
     }
 }
