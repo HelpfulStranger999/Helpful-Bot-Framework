@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace Helpful.Framework
 {
-    /// <summary>A bot configuration for <see cref="FrameworkBot"/></summary>
+    /// <summary>A bot configuration for <see cref="FrameworkBot{TConfig, TGuild, TUser}"/></summary>
     public class FrameworkBotConfig : DiscordSocketConfig
     {
         /// <summary>The token of the bot</summary>

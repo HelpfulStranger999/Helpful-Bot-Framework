@@ -123,6 +123,7 @@ namespace Helpful.Framework
             await Configuration.Connect();
             await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token);
             await SocketClient.StartAsync();
+            await Task.Run(async () => await StartConsoleAsync());
         }
 
         /// <summary>
@@ -224,6 +225,13 @@ namespace Helpful.Framework
                     }
                 }
             }
+        }
+
+        private async Task StartConsoleAsync()
+        {
+            var line = Console.ReadLine();
+            await Task.Run(async () => await ConsoleInput(line));
+            await StartConsoleAsync();
         }
 
         /// <summary>Marks the specified service as ready to disconnect</summary>
