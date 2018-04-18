@@ -64,12 +64,18 @@ namespace Helpful.Framework.Services
             {
                 Config.Users[userRepped].Reputation++;
                 await Config.WriteAsync(DatabaseType.User);
-                var nextRep = DateTimeOffset.Now.Add(Cooldown);
+                var nextRep = GenerateCooldown();
                 UpdateUser(user, nextRep);
                 return ReputationResult.FromSuccess(nextRep);
             }
 
             return ReputationResult.FromError(NextReputation(user));
+        }
+
+        /// <summary>Generates the next time from now the reputation point will become available.</summary>
+        protected virtual DateTimeOffset GenerateCooldown()
+        {
+            return DateTimeOffset.Now.Add(Cooldown);
         }
 
         /// <summary>Updates the cooldown for the specified user</summary>
