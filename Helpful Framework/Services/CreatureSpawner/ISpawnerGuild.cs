@@ -3,7 +3,7 @@
 namespace Helpful.Framework.Config
 {
     /// <summary>An extended representation of <see cref="IConfigGuild"/></summary>
-    public interface ISpawnerGuild
+    public interface ISpawnerGuild : IConfigGuild
     {
         /// <summary>How often a creature should wander by</summary>
         double Frequency { get; set; }
