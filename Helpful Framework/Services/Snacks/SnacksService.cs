@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Helpful.Framework.Config;
 using HelpfulUtilities;
 using System;
@@ -106,6 +107,45 @@ namespace Helpful.Framework.Services
             if (Managers.TryGetValue(channelId, out var manager))
                 return manager.IsActive;
             return false;
+        }
+
+        /// <summary>Generates a leaderboard for the snacks.</summary>
+        /// <param name="config">The configuration to use</param>
+        /// <param name="bot">The framework bot to use</param>
+        /// <param name="guild">The guild the command was run in. Defaults to null.</param>
+        /// <param name="scale">The <see cref="LeaderboardScale"/> to use. Defaults to <see cref="LeaderboardScale.Global"/></param>
+        /// <param name="builder">The EmbedBuild to use. Defaults to a new one.</param>
+        /// <param name="size">The size of the leaderboard. Defaults to 10.</param>
+        /// <param name="fieldFunc">A function taking a <typeparamref name="TConfig"/> and a <see cref="SocketUser"/> and
+        /// returning the field value of the positions on the leaderboard.</param>
+        /// <param name="formatEmbedFunc">A function taking and returning an embed builder for the purpose of customizing it.</param>
+        /// <returns>The embed populated with the leaderboard</returns>
+        public EmbedBuilder GenerateLeaderboard(TConfig config, FrameworkBot<TConfig, TGuild, TUser> bot, SocketGuild guild = null,
+            LeaderboardScale scale = LeaderboardScale.Global, EmbedBuilder builder = null, int size = 10,
+            Func<TUser, SocketUser, string> fieldFunc = null, Func<EmbedBuilder, EmbedBuilder> formatEmbedFunc = null)
+        {
+            builder = builder ?? new EmbedBuilder();
+            fieldFunc = fieldFunc ?? ((configUser, _) => $"{(ulong)configUser.Snacks.Sum(s => (double)s.Value)} snacks");
+            formatEmbedFunc = formatEmbedFunc ?? (embed => embed);
+
+            var orderedLeaderboard = config.Users.Values.OrderByDescending(u => u.Snacks.Sum(s => (double)s.Value));
+            var leaderboard = (scale == LeaderboardScale.Server && guild != null) ?
+                    orderedLeaderboard.Where(user => guild.GetUser(user.Id) != null).ToArray() :
+                    orderedLeaderboard.ToArray();
+
+            for (var position = 1; position <= Math.Min(leaderboard.Length, size); position++)
+            {
+                var cuser = leaderboard[position - 1];
+                var user = guild?.GetUser(cuser.Id) ?? bot.SocketClient.GetUser(cuser.Id);
+                builder.AddField(new EmbedFieldBuilder
+                {
+                    Name = $"#{position} {(user as IGuildUser)?.Nickname ?? user.Username}",
+                    Value = fieldFunc(cuser, user),
+                    IsInline = false
+                });
+            }
+
+            return formatEmbedFunc(builder);
         }
 
         /// <inheritdoc />
