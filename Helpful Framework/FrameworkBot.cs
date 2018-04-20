@@ -85,10 +85,10 @@ namespace Helpful.Framework
 
 
             var collection = new ServiceCollection();
-            collection.AddSingleton(SocketClient)
+            collection.AddSingleton(SocketClient.GetType(), SocketClient)
                 .AddSingleton(CommandService)
                 .AddSingleton(ListenerService)
-                .AddSingleton(this);
+                .AddSingleton(GetType(), this);
 
             foreach (var service in services)
             {
