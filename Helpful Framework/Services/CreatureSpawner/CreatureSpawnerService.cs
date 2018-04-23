@@ -16,7 +16,7 @@ namespace Helpful.Framework.Services
         where TGuild : class, IConfigGuild, ISpawnerGuild
         where TUser : class, IConfigUser, ISpawnerUser
     {
-        /// <summary>Provides a default field generator for <see cref="GenerateLeaderboard(TConfig, SocketGuild, LeaderboardScale, EmbedBuilder, Func{TUser, SocketUser, string})"/></summary>
+        /// <summary>Provides a default field generator for <see cref="GenerateLeaderboard(TConfig, FrameworkBot{TConfig, TGuild, TUser}, SocketGuild, LeaderboardScale, EmbedBuilder, int, Func{TUser, SocketUser, string}, Func{EmbedBuilder, EmbedBuilder})"/></summary>
         protected static readonly Func<TUser, SocketUser, string> DefaultLeaderboardFieldFunction = (configUser, socketUser) =>
         {
             return $"{configUser.Creatures} creatures";
