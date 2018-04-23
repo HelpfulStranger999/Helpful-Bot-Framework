@@ -119,27 +119,52 @@ namespace Helpful.Framework.Services
             return default(TEnum);
         }
 
+        /// <summary>Extending on <see cref="HandleSnackRequestAsync(IUserMessage, TConfig)"/> to send appropriate messages</summary>
+        public async Task<(SnackRequestType Type, ulong Amount)> HandleMessageAsync(IUserMessage message, TConfig config)
+        {
+            var type = await HandleSnackRequestAsync(message, config);
+            Managers.TryGetValue(message.Channel.Id, out var manager);
+            var user = (message.Author as IGuildUser)?.GetEffectiveName() ?? message.Author.Username;
+
+            switch (type.Type)
+            {
+                case SnackRequestType.Request:
+                    await Task.Delay(new Random().Next(0, 7));
+                    await message.Channel.SendMessageAsync(Give(manager.Snack, user, type.Amount));
+                    break;
+                case SnackRequestType.Greedy:
+                    await Task.Delay(new Random().Next(0, 7));
+                    await message.Channel.SendMessageAsync(Greed(manager.Snack, user));
+                    break;
+                case SnackRequestType.Rude:
+                    await Task.Delay(new Random().Next(0, 7));
+                    await message.Channel.SendMessageAsync(Rude(manager.Snack, user));
+                    break;
+            }
+            return type;
+        }
+
         /// <summary>Handles a snack request, parsing the type of request and adding the appropriate amount of snacks to the user.</summary>
-        public async Task<SnackRequestType> HandleSnackRequestAsync(IUserMessage message, TConfig config)
+        public async Task<(SnackRequestType Type, ulong Amount)> HandleSnackRequestAsync(IUserMessage message, TConfig config)
         {
             var type = ParseSnackRequestType(message);
-            var manager = Managers[message.Channel.Id];
+            Managers.TryGetValue(message.Channel.Id, out var manager);
 
             switch (type)
             {
                 case SnackRequestType.Request:
                     var snacksConfig = config.Guilds[message.GetGuild().Id].Snacks[message.Channel.Id];
-                    config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += GenerateAmount(snacksConfig, manager);
+                    var amount = GenerateAmount(snacksConfig, manager);
+                    config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += amount;
                     await config.WriteAsync(DatabaseType.User);
-                    break;
+                    return (type, amount);
                 case SnackRequestType.Rude:
                     config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += 1;
                     await config.WriteAsync(DatabaseType.User);
-                    break;
+                    return (type, 1);
                 default:
-                    break;
+                    return (type, 0);
             }
-            return type;
         }
 
         /// <summary>Parses and returns the <see cref="SnackRequestType"/> based on the specified message.</summary>
@@ -152,16 +177,16 @@ namespace Helpful.Framework.Services
             {
                 if (GreedPhrases.Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Greedy;
-                else
-                    return SnackRequestType.Unknown;
             }
             else
             {
                 if (RudePhrases.Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Rude;
-                else
+                else if (AgreePhrases.Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Request;
             }
+
+            return SnackRequestType.None;
         }
 
         /// <summary>Generates a leaderboard for the snacks.</summary>
