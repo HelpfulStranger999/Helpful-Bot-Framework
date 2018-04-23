@@ -3,6 +3,8 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Helpful.Framework.Config;
 using HelpfulUtilities;
+using HelpfulUtilities.Discord.Extensions;
+using HelpfulUtilities.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for snacktime.</summary>
-    /// <remarks><typeparamref name="TEnum"/> must be an enum. <typeparamref name="TGuild"/> must </remarks>
+    /// <remarks><typeparamref name="TEnum"/> must be an enum. Uses default value of enum.</remarks>
     public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService<TConfig, TGuild, TUser>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISnacksGuild
@@ -107,6 +109,59 @@ namespace Helpful.Framework.Services
             if (Managers.TryGetValue(channelId, out var manager))
                 return manager.IsActive;
             return false;
+        }
+
+        /// <summary>Gets the snack type for the event in the specified channel</summary>
+        public TEnum GetSnack(ulong channelId)
+        {
+            if (Managers.TryGetValue(channelId, out var manager))
+                return manager.Snack;
+            return default(TEnum);
+        }
+
+        /// <summary>Handles a snack request, parsing the type of request and adding the appropriate amount of snacks to the user.</summary>
+        public async Task<SnackRequestType> HandleSnackRequestAsync(IUserMessage message, TConfig config)
+        {
+            var type = ParseSnackRequestType(message);
+            var manager = Managers[message.Channel.Id];
+
+            switch (type)
+            {
+                case SnackRequestType.Request:
+                    var snacksConfig = config.Guilds[message.GetGuild().Id].Snacks[message.Channel.Id];
+                    config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += GenerateAmount(snacksConfig, manager);
+                    await config.WriteAsync(DatabaseType.User);
+                    break;
+                case SnackRequestType.Rude:
+                    config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += 1;
+                    await config.WriteAsync(DatabaseType.User);
+                    break;
+                default:
+                    break;
+            }
+            return type;
+        }
+
+        /// <summary>Parses and returns the <see cref="SnackRequestType"/> based on the specified message.</summary>
+        public SnackRequestType ParseSnackRequestType(IUserMessage message)
+        {
+            if (!Managers.TryGetValue(message.Channel.Id, out var manager) || !manager.IsActive)
+                return SnackRequestType.None;
+
+            if (manager.Users.Contains(message.Author.Id))
+            {
+                if (GreedPhrases.Any(message.Content.ContainsIgnoreCase))
+                    return SnackRequestType.Greedy;
+                else
+                    return SnackRequestType.Unknown;
+            }
+            else
+            {
+                if (RudePhrases.Any(message.Content.ContainsIgnoreCase))
+                    return SnackRequestType.Rude;
+                else
+                    return SnackRequestType.Request;
+            }
         }
 
         /// <summary>Generates a leaderboard for the snacks.</summary>
