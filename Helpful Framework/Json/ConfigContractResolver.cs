@@ -1,6 +1,7 @@
 ﻿using Discord.Net.Rest;
 using Discord.Net.Udp;
 using Discord.Net.WebSockets;
+using HelpfulUtilities.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -21,12 +22,14 @@ namespace Helpful.Framework.Json
         {
             if (typeof(MulticastDelegate).IsAssignableFrom(member.DeclaringType)) return null;
             JsonProperty property = base.CreateProperty(member, memberSerialization);
-            if ((property.DeclaringType == typeof(WebSocketProvider) && property.PropertyName == "WebSocketProvider")
-                || (property.DeclaringType == typeof(UdpSocketProvider) && property.PropertyName == "UdpSocketProvider")
-                || (property.DeclaringType == typeof(RestClientProvider) && property.PropertyName == "RestClientProvider"))
+            
+            if ((property.PropertyType.Extends(typeof(WebSocketProvider)) && property.PropertyName == "WebSocketProvider")
+                || (property.PropertyType.Extends(typeof(UdpSocketProvider)) && property.PropertyName == "UdpSocketProvider")
+                || (property.PropertyType.Extends(typeof(RestClientProvider)) && property.PropertyName == "RestClientProvider"))
             {
                 property.Ignored = true;
             }
+
             return property;
         }
     }
