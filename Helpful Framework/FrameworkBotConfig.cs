@@ -1,5 +1,4 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
 
 namespace Helpful.Framework
@@ -18,6 +17,6 @@ namespace Helpful.Framework
         /// <summary>The <see cref="CommandServiceConfig"/> to use</summary>
         public CommandServiceConfig CommandServiceConfig { get; set; } = new CommandServiceConfig();
         /// <summary>An optional path to the database.</summary>
-        public Optional<string> Database { get; set; } = Optional.Create<string>();
+        public string Database { get; set; } = null;
     }
 }
