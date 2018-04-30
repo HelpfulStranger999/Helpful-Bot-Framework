@@ -37,6 +37,7 @@ namespace Helpful.Framework.Services
         /// <summary>A map of the snack type to an array of greedy phrases</summary>
         public Dictionary<TEnum, string[]> GreedPhrases { get; set; } = new Dictionary<TEnum, string[]>();
 
+        /// <summary>Sets default messages and phrases</summary>
         public SnackMessageBuilder<TEnum> WithDefaults()
         {
             foreach (var type in Enum.GetValues(typeof(TEnum)).Cast<TEnum>())
