@@ -175,14 +175,14 @@ namespace Helpful.Framework.Services
 
             if (manager.Users.Contains(message.Author.Id))
             {
-                if (GreedPhrases.Any(message.Content.ContainsIgnoreCase))
+                if (GreedPhrases[manager.Snack].Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Greedy;
             }
             else
             {
-                if (RudePhrases.Any(message.Content.ContainsIgnoreCase))
+                if (RudePhrases[manager.Snack].Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Rude;
-                else if (AgreePhrases.Any(message.Content.ContainsIgnoreCase))
+                else if (AgreePhrases[manager.Snack].Any(message.Content.ContainsIgnoreCase))
                     return SnackRequestType.Request;
             }
 
