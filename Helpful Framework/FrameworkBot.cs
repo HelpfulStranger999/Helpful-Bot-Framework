@@ -14,6 +14,7 @@ using Helpful.Framework.Config;
 using HelpfulUtilities.Discord.Commands.Extensions;
 using System.Linq;
 using System.Threading;
+using Helpful.Framework.Services;
 
 namespace Helpful.Framework
 {
@@ -88,6 +89,7 @@ namespace Helpful.Framework
             collection.AddSingleton(SocketClient.GetType(), SocketClient)
                 .AddSingleton(CommandService)
                 .AddSingleton(ListenerService)
+                .AddSingleton(new ConfigService<TConfig, TGuild, TUser>(this))
                 .AddSingleton(GetType(), this);
 
             foreach (var service in services)
