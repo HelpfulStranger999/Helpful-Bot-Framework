@@ -42,6 +42,14 @@ namespace Helpful.Framework
         public ConcurrentDictionary<Type, bool> DisconnectList { get; protected set; } = new ConcurrentDictionary<Type, bool>();
         /// <summary>A list of services</summary>
         protected internal IList<IService<TConfig, TGuild, TUser>> ServiceList { get; protected set; } = new List<IService<TConfig, TGuild, TUser>>();
+        /// <summary>A list of type readers</summary>
+        protected Dictionary<Type, TypeReader> TypeReaders { get; } = new Dictionary<Type, TypeReader>
+        {
+            { typeof(TimeSpan), new TimeSpanTypeReader() },
+            { typeof(IEmote), new IEmoteTypeReader() },
+            { typeof(Emoji), new EmojiTypeReader() },
+            { typeof(Emote), new EmoteTypeReader() }
+        };
 
         /// <summary>Starts the bot</summary>
         public abstract Task StartAsync();
@@ -105,10 +113,8 @@ namespace Helpful.Framework
 
             ServiceProvider = collection.BuildServiceProvider();
 
-            CommandService.AddTypeReader(typeof(TimeSpan), new TimeSpanTypeReader());
-            CommandService.AddTypeReader(typeof(IEmote), new IEmoteTypeReader());
-            CommandService.AddTypeReader(typeof(Emoji), new EmojiTypeReader());
-            CommandService.AddTypeReader(typeof(Emote), new EmoteTypeReader());
+            foreach (var pair in TypeReaders)
+                CommandService.AddTypeReader(pair.Key, pair.Value, true);
 
             ListenerService.AddModules(Assembly.GetAssembly(GetType()));
             await CommandService.AddModulesAsync(Assembly.GetAssembly(GetType()), ServiceProvider);
