@@ -1,6 +1,8 @@
 ﻿using Discord.WebSocket;
 using Helpful.Framework.Config;
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Helpful.Framework
@@ -10,8 +12,10 @@ namespace Helpful.Framework
         where TGuild : class, IConfigGuild
         where TUser : class, IConfigUser
     {
+        /// <summary>Console input event handler</summary>
+        public delegate Task ConsoleInputEvent(string line);
         /// <summary>Fired when a new console line is sent</summary>
-        public event Func<string, Task> ConsoleInput;
+        public event ConsoleInputEvent ConsoleInput;
 
         /// <summary>Fired when connected to the Discord gateway</summary>
         public void Connected(Func<DiscordSocketClient, Task> func) 
@@ -63,6 +67,17 @@ namespace Helpful.Framework
                 bot.LatencyUpdated += func;
             else
                 CastInternal().ShardLatencyUpdated += (o, n, _) => func(o, n);
+        }
+
+
+        private void StartConsole()
+        {
+            var line = Console.ReadLine();
+            Task.Run(async () =>
+            {
+                await Task.WhenAll(ConsoleInput.GetInvocationList().Select(x => (x as ConsoleInputEvent)?.Invoke(line)));
+            });
+            StartConsole();
         }
 
         private DiscordShardedClient CastInternal(BaseSocketClient client = null)

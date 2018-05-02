@@ -15,6 +15,7 @@ using HelpfulUtilities.Discord.Commands.Extensions;
 using System.Linq;
 using System.Threading;
 using Helpful.Framework.Services;
+using HelpfulUtilities.Discord.Extensions;
 
 namespace Helpful.Framework
 {
@@ -50,6 +51,12 @@ namespace Helpful.Framework
             { typeof(Emoji), new EmojiTypeReader() },
             { typeof(Emote), new EmoteTypeReader() }
         };
+
+        /// <summary>Readies base features</summary>
+        protected FrameworkBot()
+        {
+            Task.Run(() => StartConsole());
+        }
 
         /// <summary>Starts the bot</summary>
         public abstract Task StartAsync();
@@ -131,10 +138,6 @@ namespace Helpful.Framework
             await Configuration.Connect();
             await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token);
             await SocketClient.StartAsync();
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(() => StartConsoleAsync());
-#pragma warning restore CS4014
         }
 
         /// <summary>
@@ -201,7 +204,7 @@ namespace Helpful.Framework
         /// <summary>Default handling of ready events</summary>
         public async Task ReadyHandler()
         {
-            var guilds = SocketClient.Guilds.Where(g => Configuration.Guilds.ContainsKey(g.Id));
+            var guilds = SocketClient.Guilds.Where(g => !Configuration.Guilds.ContainsKey(g.Id));
 
             foreach (var guild in guilds)
                 await Configuration.Create(guild);
@@ -222,7 +225,7 @@ namespace Helpful.Framework
                 var context = CreateContext(message);
 
                 if (message.Channel is SocketTextChannel)
-                    prefix = Configuration.Guilds[0].Prefix;
+                    prefix = Configuration.Guilds[message.GetGuild().Id].Prefix;
 
                 if (message.HasPrefix(prefix, SocketClient, ref pos))
                 {
@@ -236,13 +239,6 @@ namespace Helpful.Framework
                     }
                 }
             }
-        }
-
-        private async Task StartConsoleAsync()
-        {
-            var line = Console.ReadLine();
-            await Task.Run(async () => await ConsoleInput(line));
-            await StartConsoleAsync();
         }
 
         /// <summary>Marks the specified service as ready to disconnect</summary>
