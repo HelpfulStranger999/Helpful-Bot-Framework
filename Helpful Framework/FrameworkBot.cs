@@ -130,7 +130,12 @@ namespace Helpful.Framework
         {
             await Configuration.Connect();
             await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token);
-            await SocketClient.StartAsync();
+
+            if (SocketClient is DiscordSocketClient client)
+                await client.StartAsync();
+            else
+                await CastInternal().StartAsync();
+
             await Task.Run(async () => await StartConsoleAsync());
         }
 
@@ -157,8 +162,12 @@ namespace Helpful.Framework
                     Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value));
             }
 
+            if (SocketClient is DiscordSocketClient client)
+                await client.StopAsync();
+            else
+                await CastInternal().StopAsync();
+
             await SocketClient.LogoutAsync();
-            await SocketClient.StopAsync();
             await Configuration.Disconnect();
         }
 
