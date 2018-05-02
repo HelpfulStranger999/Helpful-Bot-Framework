@@ -29,16 +29,16 @@ namespace Helpful.Framework.Services
             var newGuilds = Client.Guilds.Where(g => !Config.Guilds.ContainsKey(g.Id));
             foreach (var guild in newGuilds)
             {
-                await Config.Create(guild);
+                await Config.Create(guild).ConfigureAwait(false);
             }
 
-            if (newGuilds.LongCount() > 0) await Config.WriteAsync(DatabaseType.Guild);
+            if (newGuilds.LongCount() > 0) await Config.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
         }
 
         private async Task GuildJoin(SocketGuild guild)
         {
-            await Config.Create(guild);
-            await Config.WriteAsync(DatabaseType.Guild);
+            await Config.Create(guild).ConfigureAwait(false);
+            await Config.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -47,7 +47,7 @@ namespace Helpful.Framework.Services
         /// <inheritdoc />
         public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
-            await Config.Disconnect();
+            await Config.Disconnect().ConfigureAwait(false);
         }
     }
 }

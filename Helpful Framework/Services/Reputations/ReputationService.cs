@@ -63,7 +63,7 @@ namespace Helpful.Framework.Services
             if (CanRep(user))
             {
                 Config.Users[userRepped].Reputation++;
-                await Config.WriteAsync(DatabaseType.User);
+                await Config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
                 var nextRep = GenerateCooldown();
                 UpdateUser(user, nextRep);
                 return ReputationResult.FromSuccess(nextRep);

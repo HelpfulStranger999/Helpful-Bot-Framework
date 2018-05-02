@@ -32,14 +32,14 @@ namespace Helpful.Framework.Services
         {
             foreach (var guild in Bot.SocketClient.Guilds.Where(g => g.CurrentUser.GuildPermissions.ManageGuild))
             {
-                Invites.AddRange(await guild.GetInvitesAsync());
+                Invites.AddRange(await guild.GetInvitesAsync().ConfigureAwait(false));
             }
         }
         
         private async Task OnMemberJoin(SocketGuildUser user)
         {
             var cachedInvites = Invites.Where(i => i.GuildId == user.Guild.Id);
-            var invites = await user.Guild.GetInvitesAsync();
+            var invites = await user.Guild.GetInvitesAsync().ConfigureAwait(false);
             foreach (var invite in invites)
             {
                 var oldInvite = cachedInvites.FirstOrDefault(x => x.Code == invite.Code);
@@ -47,7 +47,7 @@ namespace Helpful.Framework.Services
                 {
                     Invites.Add(invite);
                     Bot.Configuration.Guilds[user.Guild.Id].Invites[invite.Inviter.Id]++;
-                    await Bot.Configuration.WriteAsync(DatabaseType.Guild);
+                    await Bot.Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
                 }
                 else if (oldInvite.Uses < invite.Uses)
                 {
@@ -55,7 +55,7 @@ namespace Helpful.Framework.Services
                     Invites.Add(invite);
 
                     Bot.Configuration.Guilds[user.Guild.Id].Invites[invite.Inviter.Id]++;
-                    await Bot.Configuration.WriteAsync(DatabaseType.Guild);
+                    await Bot.Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
                 }
                 else
                 {
@@ -65,15 +65,11 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
-        {
-            throw new NotImplementedException();
-        }
-
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => true;
         /// <inheritdoc />
         public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
         {
-            await Bot.Configuration.WriteAsync(DatabaseType.Guild);
+            await Bot.Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
         }
     }
 }

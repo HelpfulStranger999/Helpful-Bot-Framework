@@ -129,7 +129,7 @@ namespace Helpful.Framework.Services
         {
             var pot = config.EarlyBirdPot;
             var variance = Random.Next(0, config.EarlyBirdPotVariance);
-            var users = (await channel.GetUsersAsync().FlattenAsync()).Where(user =>
+            var users = (await channel.GetUsersAsync().FlattenAsync().ConfigureAwait(false)).Where(user =>
             {
                 return !user.IsBot && !user.IsWebhook
                         && user.Status != UserStatus.Offline

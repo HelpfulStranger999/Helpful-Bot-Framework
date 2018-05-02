@@ -76,7 +76,7 @@ namespace Helpful.Framework
             Task.Run(async () =>
             {
                 await Task.WhenAll(ConsoleInput.GetInvocationList().Select(x => (x as ConsoleInputEvent)?.Invoke(line)));
-            });
+            }).ConfigureAwait(false);
             StartConsole();
         }
 

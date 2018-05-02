@@ -51,8 +51,8 @@ namespace Helpful.Framework.Services
             manager.Creature = message;
             manager.Despawner = new Timer(async _ =>
             {
-                await message.Channel.SendMessageAsync(DespawnMessage);
-                await Despawn(message.Channel.Id);
+                await message.Channel.SendMessageAsync(DespawnMessage).ConfigureAwait(false);
+                await Despawn(message.Channel.Id).ConfigureAwait(false);
             }, null, TimeSpan.FromMilliseconds(guild.Duration), Timeout.InfiniteTimeSpan);
 
             return true;
@@ -64,13 +64,13 @@ namespace Helpful.Framework.Services
         public async Task<bool> Despawn(ulong channelId, TConfig config, TUser user)
         {
             if (!AnyLoose(channelId)) return false;
-            await Spawner[channelId].Creature.DeleteAsync();
+            await Spawner[channelId].Creature.DeleteAsync().ConfigureAwait(false);
             Spawner[channelId].Despawner.Change(Timeout.Infinite, Timeout.Infinite);
 
             if (user != null)
             {
                 user.Creatures++;
-                await config.WriteAsync(DatabaseType.User);
+                await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
             }
 
             if (Disconnecting && CanDisconnect(Bot))

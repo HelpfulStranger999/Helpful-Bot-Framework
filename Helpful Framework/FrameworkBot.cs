@@ -124,7 +124,7 @@ namespace Helpful.Framework
                 CommandService.AddTypeReader(pair.Key, pair.Value, true);
 
             ListenerService.AddModules(Assembly.GetAssembly(GetType()));
-            await CommandService.AddModulesAsync(Assembly.GetAssembly(GetType()), ServiceProvider);
+            await CommandService.AddModulesAsync(Assembly.GetAssembly(GetType()), ServiceProvider).ConfigureAwait(false);
 
             SocketClient.MessageReceived += MessageReceivedHandler;
             Ready(ReadyHandler);
@@ -135,9 +135,9 @@ namespace Helpful.Framework
         /// </summary>
         protected async Task StartInternalAsync()
         {
-            await Configuration.Connect();
-            await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token);
-            await SocketClient.StartAsync();
+            await Configuration.Connect().ConfigureAwait(false);
+            await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token).ConfigureAwait(false);
+            await SocketClient.StartAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -154,18 +154,18 @@ namespace Helpful.Framework
                 });
 
                 await Task.WhenAny(Task.WhenAll(DisconnectList.Keys.Select(type => 
-                    Task.Run(() => DisconnectList[type]))), Task.Delay(timeout.Value));
+                    Task.Run(() => DisconnectList[type]))), Task.Delay(timeout.Value)).ConfigureAwait(false);
             }
 
             if(ServiceList.LongCount() >= 0)
             {
                 await Task.WhenAny(Task.WhenAll(ServiceList.Select(service =>
-                    Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value));
+                    Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value)).ConfigureAwait(false);
             }
 
-            await SocketClient.StopAsync();
-            await SocketClient.LogoutAsync();
-            await Configuration.Disconnect();
+            await SocketClient.StopAsync().ConfigureAwait(false);
+            await SocketClient.LogoutAsync().ConfigureAwait(false);
+            await Configuration.Disconnect().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -175,8 +175,8 @@ namespace Helpful.Framework
         {
             await StopAsync(graceful, timeout).ContinueWith(async _ =>
             {
-                await StartAsync();
-            });
+                await StartAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Helpful.Framework
         protected async Task UnloadInternalAsync()
         {
             foreach (var module in CommandService.Modules)
-                await CommandService.RemoveModuleAsync(module);
+                await CommandService.RemoveModuleAsync(module).ConfigureAwait(false);
 
             foreach (var listener in ListenerService.Listeners)
                 ListenerService.RemoveModule(listener);
@@ -207,10 +207,10 @@ namespace Helpful.Framework
             var guilds = SocketClient.Guilds.Where(g => !Configuration.Guilds.ContainsKey(g.Id));
 
             foreach (var guild in guilds)
-                await Configuration.Create(guild);
+                await Configuration.Create(guild).ConfigureAwait(false);
 
             if (guilds.LongCount() > 0)
-                await Configuration.WriteAsync(DatabaseType.Guild);
+                await Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
         }
 
         /// <summary>Default handling of messages</summary>
@@ -229,13 +229,13 @@ namespace Helpful.Framework
 
                 if (message.HasPrefix(prefix, SocketClient, ref pos))
                 {
-                    await HandleResult(context, await CommandService.ExecuteAsync(context, pos, ServiceProvider));
+                    await HandleResult(context, await CommandService.ExecuteAsync(context, pos, ServiceProvider)).ConfigureAwait(false);
                 }
                 else
                 {
                     foreach (var result in await ListenerService.ExecuteAsync(context, ServiceProvider))
                     {
-                        await HandleResult(context, result, false);
+                        await HandleResult(context, result, false).ConfigureAwait(false);
                     }
                 }
             }

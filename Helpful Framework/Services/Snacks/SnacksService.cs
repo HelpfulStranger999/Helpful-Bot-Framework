@@ -50,9 +50,9 @@ namespace Helpful.Framework.Services
                 manager.HasBegun = true;
                 await Task.Run(async () =>
                 {
-                    await Operations.DelayAsync(GenerateDelay(snacksConfig));
-                    await StartEvent(channel, snacksConfig, Snack());
-                });
+                    await Operations.DelayAsync(GenerateDelay(snacksConfig)).ConfigureAwait(false);
+                    await StartEvent(channel, snacksConfig, Snack()).ConfigureAwait(false);
+                }).ConfigureAwait(false);
                 return true;
             }
 
@@ -63,16 +63,16 @@ namespace Helpful.Framework.Services
         public async Task StartEvent(ITextChannel channel, ISnacksChannelConfig config, TEnum snack)
         {
             var manager = Managers.GetOrAdd(channel.Id, new SnackEventManager<TEnum>());
-            manager.Pot = await GeneratePotSizeAsync(config, channel);
+            manager.Pot = await GeneratePotSizeAsync(config, channel).ConfigureAwait(false);
             manager.IsActive = true;
             manager.Snack = snack;
 
             manager.EndTimer = new Timer(async _ =>
             {
-                await StopEvent(channel);
+                await StopEvent(channel).ConfigureAwait(false);
             }, null, TimeSpan.FromMilliseconds(GenerateDuration(config)), Timeout.InfiniteTimeSpan);
 
-            await channel.SendMessageAsync(Arrival(snack));
+            await channel.SendMessageAsync(Arrival(snack)).ConfigureAwait(false);
         }
 
         /// <summary>Stops the snack event running in the specified channel.</summary>
@@ -80,7 +80,7 @@ namespace Helpful.Framework.Services
         {
             var snack = Managers[channel.Id].Snack;
             await channel.SendMessageAsync(Managers[channel.Id].Users.Any() ?
-                Departure(snack) : NoPeople(snack));
+                Departure(snack) : NoPeople(snack)).ConfigureAwait(false);
 
             Managers[channel.Id].Reset();
             if (CanDisconnect(Bot))
@@ -122,23 +122,23 @@ namespace Helpful.Framework.Services
         /// <summary>Extending on <see cref="HandleSnackRequestAsync(IUserMessage, TConfig)"/> to send appropriate messages</summary>
         public async Task<(SnackRequestType Type, ulong Amount)> HandleMessageAsync(IUserMessage message, TConfig config)
         {
-            var type = await HandleSnackRequestAsync(message, config);
+            var type = await HandleSnackRequestAsync(message, config).ConfigureAwait(false);
             Managers.TryGetValue(message.Channel.Id, out var manager);
             var user = (message.Author as IGuildUser)?.GetEffectiveName() ?? message.Author.Username;
 
             switch (type.Type)
             {
                 case SnackRequestType.Request:
-                    await Task.Delay(new Random().Next(0, 7));
-                    await message.Channel.SendMessageAsync(Give(manager.Snack, user, type.Amount));
+                    await Task.Delay(new Random().Next(0, 7)).ConfigureAwait(false);
+                    await message.Channel.SendMessageAsync(Give(manager.Snack, user, type.Amount)).ConfigureAwait(false);
                     break;
                 case SnackRequestType.Greedy:
-                    await Task.Delay(new Random().Next(0, 7));
-                    await message.Channel.SendMessageAsync(Greed(manager.Snack, user));
+                    await Task.Delay(new Random().Next(0, 7)).ConfigureAwait(false);
+                    await message.Channel.SendMessageAsync(Greed(manager.Snack, user)).ConfigureAwait(false);
                     break;
                 case SnackRequestType.Rude:
-                    await Task.Delay(new Random().Next(0, 7));
-                    await message.Channel.SendMessageAsync(Rude(manager.Snack, user));
+                    await Task.Delay(new Random().Next(0, 7)).ConfigureAwait(false);
+                    await message.Channel.SendMessageAsync(Rude(manager.Snack, user)).ConfigureAwait(false);
                     break;
             }
             return type;
@@ -156,11 +156,11 @@ namespace Helpful.Framework.Services
                     var snacksConfig = config.Guilds[message.GetGuild().Id].Snacks[message.Channel.Id];
                     var amount = GenerateAmount(snacksConfig, manager);
                     config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += amount;
-                    await config.WriteAsync(DatabaseType.User);
+                    await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
                     return (type, amount);
                 case SnackRequestType.Rude:
                     config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += 1;
-                    await config.WriteAsync(DatabaseType.User);
+                    await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
                     return (type, 1);
                 default:
                     return (type, 0);
@@ -241,7 +241,7 @@ namespace Helpful.Framework.Services
             foreach (var channel in Managers.Keys)
             {
                 var msgChannel = bot.SocketClient.GetChannel(channel) as ITextChannel;
-                await StopEvent(msgChannel);
+                await StopEvent(msgChannel).ConfigureAwait(false);
             }
         }
     }
