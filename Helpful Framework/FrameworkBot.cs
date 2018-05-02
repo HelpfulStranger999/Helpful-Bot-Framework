@@ -130,11 +130,7 @@ namespace Helpful.Framework
         {
             await Configuration.Connect();
             await SocketClient.LoginAsync(TokenType.Bot, BotConfig.Token);
-
-            if (SocketClient is DiscordSocketClient client)
-                await client.StartAsync();
-            else
-                await CastInternal().StartAsync();
+            await SocketClient.StartAsync();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(() => StartConsoleAsync());
@@ -164,11 +160,7 @@ namespace Helpful.Framework
                     Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value));
             }
 
-            if (SocketClient is DiscordSocketClient client)
-                await client.StopAsync();
-            else
-                await CastInternal().StopAsync();
-
+            await SocketClient.StopAsync();
             await SocketClient.LogoutAsync();
             await Configuration.Disconnect();
         }
