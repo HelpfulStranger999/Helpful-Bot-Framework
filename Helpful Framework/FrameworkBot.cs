@@ -107,18 +107,15 @@ namespace Helpful.Framework
                 .AddSingleton(new ConfigService<TConfig, TGuild, TUser>(this))
                 .AddSingleton(GetType(), this);
 
-            foreach (var service in services)
-            {
-                collection.AddSingleton(service.GetType(), service);
-            }
+            DisconnectList.AddRange(ServiceList.Select(i =>
+                new KeyValuePair<Type, bool>(i.GetType(), false)));
 
-            foreach (var service in ServiceList)
-            {
-                DisconnectList[service.GetType()] = false;
-                collection.AddSingleton(service.GetType(), service);
-            }
+            var deps = new object[services.Length + ServiceList.Count];
 
-            ServiceProvider = collection.BuildServiceProvider();
+            deps.AddRange(services);
+            deps.AddRange(ServiceList);
+
+            ServiceProvider = BuildServices(collection, deps);
 
             foreach (var pair in TypeReaders)
                 CommandService.AddTypeReader(pair.Key, pair.Value, true);
@@ -239,6 +236,18 @@ namespace Helpful.Framework
                     }
                 }
             }
+        }
+        /// <summary>Builds the service provider.</summary>
+        public virtual IServiceProvider BuildServices(IServiceCollection collection, params object[] dependencies)
+        {
+            collection = collection ?? new ServiceCollection();
+
+            foreach (var dependency in dependencies)
+            {
+                collection.AddSingleton(dependency.GetType(), dependency);
+            }
+
+            return collection.BuildServiceProvider();
         }
 
         /// <summary>Marks the specified service as ready to disconnect</summary>
