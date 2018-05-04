@@ -104,7 +104,6 @@ namespace Helpful.Framework
             collection.AddSingleton(SocketClient.GetType(), SocketClient)
                 .AddSingleton(CommandService)
                 .AddSingleton(ListenerService)
-                .AddSingleton(new ConfigService<TConfig, TGuild, TUser>(this))
                 .AddSingleton(GetType(), this);
 
             DisconnectList.AddRange(ServiceList.Select(i =>
