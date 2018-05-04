@@ -110,12 +110,13 @@ namespace Helpful.Framework
                 new KeyValuePair<Type, bool>(i.GetType(), false)));
 
             var deps = new object[services.Length + ServiceList.Count];
+            var incrementer = 0;
 
-            for (int i = 0; i < services.Length; i++)
-                deps[i] = services[i];
+            for (; incrementer < services.Length; incrementer++)
+                deps[incrementer] = services[incrementer];
 
-            for (int i = services.Length; i < ServiceList.Count; i++)
-                deps[i] = ServiceList[i];
+            for (var init = incrementer; incrementer < ServiceList.Count; incrementer++)
+                deps[incrementer] = ServiceList[incrementer - init];
 
             ServiceProvider = BuildServices(collection, deps);
 
