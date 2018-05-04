@@ -109,7 +109,7 @@ namespace Helpful.Framework
             DisconnectList.AddRange(ServiceList.Select(i =>
                 new KeyValuePair<Type, bool>(i.GetType(), false)));
 
-            var deps = new object[services.Length + ServiceList.Count];
+            var deps = new List<object>(services.Length + ServiceList.Count);
 
             deps.AddRange(services);
             deps.AddRange(ServiceList);
