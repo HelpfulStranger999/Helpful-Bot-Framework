@@ -115,7 +115,7 @@ namespace Helpful.Framework
             for (; incrementer < services.Length; incrementer++)
                 deps[incrementer] = services[incrementer];
 
-            for (var init = 0; incrementer < ServiceList.Count; incrementer++, init++)
+            for (var init = 0; init < ServiceList.Count; incrementer++, init++)
                 deps[incrementer] = ServiceList[init];
 
             ServiceProvider = BuildServices(collection, deps);
