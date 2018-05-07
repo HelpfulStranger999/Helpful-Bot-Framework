@@ -153,11 +153,11 @@ namespace Helpful.Framework
                     DisconnectList[service.GetType()] = service.CanDisconnect(this);
                 });
 
-                await Task.WhenAny(Task.WhenAll(DisconnectList.Keys.Select(type => 
+                await Task.WhenAny(Task.WhenAll(DisconnectList.Keys.Select(type =>
                     Task.Run(() => DisconnectList[type]))), Task.Delay(timeout.Value)).ConfigureAwait(false);
             }
 
-            if(ServiceList.LongCount() >= 0)
+            if (ServiceList.LongCount() >= 0)
             {
                 await Task.WhenAny(Task.WhenAll(ServiceList.Select(service =>
                     Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value)).ConfigureAwait(false);

@@ -4,6 +4,6 @@
     public interface ISpawnerUser : IConfigUser
     {
         /// <summary>How many creatures this user has</summary>
-        ulong Creatures { get; set; }     
+        ulong Creatures { get; set; }
     }
 }

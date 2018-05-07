@@ -30,7 +30,7 @@ namespace Helpful.Framework.Services
         {
             Config = config;
             RepsCount = reps;
-            Cooldown = cooldown == default(TimeSpan) ? 
+            Cooldown = cooldown == default(TimeSpan) ?
                 TimeSpan.FromDays(1) : cooldown;
         }
 

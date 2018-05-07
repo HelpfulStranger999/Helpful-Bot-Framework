@@ -18,7 +18,7 @@ namespace Helpful.Framework
         public event ConsoleInputEvent ConsoleInput;
 
         /// <summary>Fired when connected to the Discord gateway</summary>
-        public void Connected(Func<DiscordSocketClient, Task> func) 
+        public void Connected(Func<DiscordSocketClient, Task> func)
             => CastInternal().ShardConnected += func;
 
         /// <summary>Fired when connected to the Discord gateway</summary>
@@ -31,7 +31,7 @@ namespace Helpful.Framework
         }
 
         /// <summary>Fired when disconnected from the Discord gateway</summary>
-        public void Disconnected(Func<Exception, DiscordSocketClient, Task> func) 
+        public void Disconnected(Func<Exception, DiscordSocketClient, Task> func)
             => CastInternal().ShardDisconnected += func;
 
         /// <summary>Fired when disconnected from the Discord gateway</summary>
@@ -44,7 +44,7 @@ namespace Helpful.Framework
         }
 
         /// <summary>Fired when guild data has finished downloading</summary>
-        public void Ready(Func<DiscordSocketClient, Task> func) 
+        public void Ready(Func<DiscordSocketClient, Task> func)
             => CastInternal().ShardReady += func;
 
         /// <summary>Fired when guild data has finished downloading</summary>

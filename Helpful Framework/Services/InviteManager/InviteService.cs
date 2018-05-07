@@ -35,7 +35,7 @@ namespace Helpful.Framework.Services
                 Invites.AddRange(await guild.GetInvitesAsync().ConfigureAwait(false));
             }
         }
-        
+
         private async Task OnMemberJoin(SocketGuildUser user)
         {
             var cachedInvites = Invites.Where(i => i.GuildId == user.Guild.Id);

@@ -34,7 +34,7 @@ namespace Helpful.Framework.Services
         /// <summary>Attempts to begin a snack event with the specified config in the specified context.</summary>
         public async Task<bool> TryStartEvent(TConfig config, ICommandContext context)
         {
-            if (context.Guild == null || 
+            if (context.Guild == null ||
                 !config.Guilds[context.Guild.Id].Snacks.ContainsKey(context.Channel.Id)
                 || !CanStartEvent(context.Channel.Id))
             {
@@ -58,7 +58,7 @@ namespace Helpful.Framework.Services
 
             return false;
         }
-        
+
         /// <summary>Begins a snack event in the specified channel with the specified config and the specified snack type.</summary>
         public async Task StartEvent(ITextChannel channel, ISnacksChannelConfig config, TEnum snack)
         {
