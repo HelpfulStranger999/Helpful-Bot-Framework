@@ -19,7 +19,7 @@ namespace Helpful.Framework.Services
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISnacksGuild
         where TUser : class, IConfigUser, ISnacksUser<TEnum>
-        where TEnum : struct, IComparable, IConvertible, IFormattable
+        where TEnum : Enum
     {
         /// <summary>Whether this service is shutting down.</summary>
         protected bool Disconnecting => Bot != null;
@@ -116,7 +116,7 @@ namespace Helpful.Framework.Services
         {
             if (Managers.TryGetValue(channelId, out var manager))
                 return manager.Snack;
-            return default(TEnum);
+            return default;
         }
 
         /// <summary>Extending on <see cref="HandleSnackRequestAsync(IUserMessage, TConfig)"/> to send appropriate messages</summary>

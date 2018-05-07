@@ -7,7 +7,7 @@ namespace Helpful.Framework.Services
 {
     /// <summary>A snack event manager for <see cref="SnacksService{TConfig, TGuild, TUser, TEnum}"/></summary>
     public class SnackEventManager<TEnum>
-        where TEnum : struct, IConvertible, IComparable, IFormattable
+        where TEnum : Enum
     {
         // Queued
         /// <summary>How many messages have passed since the last event</summary>
@@ -23,7 +23,7 @@ namespace Helpful.Framework.Services
         public bool IsActive { get; set; } = false;
 
         /// <summary>The type of snack the event is currently running as</summary>
-        public TEnum Snack { get; set; } = default(TEnum);
+        public TEnum Snack { get; set; } = default;
 
         /// <summary>How much of the pot is left.</summary>
         public ulong Pot { get; set; } = 0;
@@ -41,7 +41,7 @@ namespace Helpful.Framework.Services
             Pot = 0;
             HasBegun = false;
             IsActive = false;
-            Snack = default(TEnum);
+            Snack = default;
             Users.Clear();
         }
     }

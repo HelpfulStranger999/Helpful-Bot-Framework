@@ -13,7 +13,7 @@ namespace Helpful.Framework.Services
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISnacksGuild
         where TUser : class, IConfigUser, ISnacksUser<TEnum>
-        where TEnum : struct, IComparable, IConvertible, IFormattable
+        where TEnum : Enum
     {
         /// <summary>A map of the snack type to the snacks name.</summary>
         protected Dictionary<TEnum, string> Names { get; }

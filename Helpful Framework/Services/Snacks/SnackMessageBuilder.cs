@@ -5,7 +5,7 @@ using System.Linq;
 namespace Helpful.Framework.Services
 {
     /// <summary>Builds a collection of snack messages and phrases for <see cref="SnacksService{TConfig, TGuild, TUser, TEnum}"/></summary>
-    public class SnackMessageBuilder<TEnum>
+    public class SnackMessageBuilder<TEnum> where TEnum : Enum
     {
         /// <summary>Default instance of <see cref="SnackMessageBuilder{TEnum}"/></summary>
         public static SnackMessageBuilder<TEnum> Instance = new SnackMessageBuilder<TEnum>().WithDefaults();
@@ -65,7 +65,7 @@ namespace Helpful.Framework.Services
 
         // Message
 
-        private static string[] _arrival = new string[]
+        private static readonly string[] _arrival = new string[]
         {
             "It's snack time!",
             "I'm back with s'more snacks! Who wants!?",
@@ -90,7 +90,7 @@ namespace Helpful.Framework.Services
             "So who's gonna help me eat all these snacks? :3"
         };
 
-        private static string[] _departure = new string[]
+        private static readonly string[] _departure = new string[]
         {
             "I'm out of snacks! I'll be back with more soon.",
             "I'm out of snacks :( I'll be back soon with more!",
@@ -98,7 +98,7 @@ namespace Helpful.Framework.Services
             "Alright, I gotta get back to my errands. I'll see you guys soon!"
         };
 
-        private static string[] _give = new string[]
+        private static readonly string[] _give = new string[]
         {
             "Here ya go, {1:#}, here's {0:D} {2:#}!",
             "Alright here ya go, {1:#}, {0:D} {2:#} for you!",
@@ -109,19 +109,19 @@ namespace Helpful.Framework.Services
             "Hold your horses {1:#}! Alright, {0:D} {2:#} for you :)"
         };
 
-        private static string[] _rude = new string[]
+        private static readonly string[] _rude = new string[]
         {
             "Wow, you're rude. Have one {1:#}, {0:#}."
         };
 
-        private static string[] _greed = new string[]
+        private static readonly string[] _greed = new string[]
         {
             "Don't be greedy now! you already got some {1:#} {0:#}!",
             "You already got your {1:#} {0:#}!",
             "Come on {0:#}, you already got your {1:#}! We gotta make sure there's some for errbody!"
         };
 
-        private static string[] _nopeople = new string[]
+        private static readonly string[] _nopeople = new string[]
         {
             "I guess nobody wants snacks... more for me!`",
             "Guess nobody's here.. I'll just head out then`",
@@ -130,7 +130,7 @@ namespace Helpful.Framework.Services
             "I guess i'll just come back later.."
         };
 
-        private static string[] _lastsec = new string[]
+        private static readonly string[] _lastsec = new string[]
         {
             "Fine fine, {0:#}, I'll give you {1:D} of my on-the-road {2:#}.. Cya!",
             "Oh! {0:#}, you caught me right before I left! Alright, i'll give you {1:D} of my own {2:#}"
@@ -138,7 +138,7 @@ namespace Helpful.Framework.Services
 
         // Phrases
 
-        private static string[] _agree_phrases = new string[]
+        private static readonly string[] _agree_phrases = new string[]
         {
             "holds out hand",
             "im ready",
@@ -173,7 +173,7 @@ namespace Helpful.Framework.Services
             "me want"
         };
 
-        private static string[] _greed_phrases = new string[]
+        private static readonly string[] _greed_phrases = new string[]
         {
             "holds out hand",
             "im ready",
@@ -214,7 +214,7 @@ namespace Helpful.Framework.Services
             "more snack"
         };
 
-        private static string[] _rude_phrases = new string[]
+        private static readonly string[] _rude_phrases = new string[]
         {
             "hand over"
         };
