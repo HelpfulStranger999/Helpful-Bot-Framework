@@ -15,16 +15,17 @@ namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for snacktime.</summary>
     /// <remarks><typeparamref name="TEnum"/> must be an enum. Uses default value of enum.</remarks>
-    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService<TConfig, TGuild, TUser>
+    public partial class SnacksService<TConfig, TGuild, TUser, TCommandContext, TEnum> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISnacksGuild
         where TUser : class, IConfigUser, ISnacksUser<TEnum>
+        where TCommandContext : class, ICommandContext
         where TEnum : Enum
     {
         /// <summary>Whether this service is shutting down.</summary>
         protected bool Disconnecting => Bot != null;
-        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser}"/> for this service. Non-null only when shutting down.</summary>
-        protected FrameworkBot<TConfig, TGuild, TUser> Bot { get; set; } = null;
+        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser, TCommandContext}"/> for this service. Non-null only when shutting down.</summary>
+        protected FrameworkBot<TConfig, TGuild, TUser, TCommandContext> Bot { get; set; } = null;
         /// <summary>A random number generator for generating values.</summary>
         protected AdvancedRandom Random { get; set; } = new AdvancedRandom();
 
@@ -200,7 +201,7 @@ namespace Helpful.Framework.Services
         /// returning the field value of the positions on the leaderboard.</param>
         /// <param name="formatEmbedFunc">A function taking and returning an embed builder for the purpose of customizing it.</param>
         /// <returns>The embed populated with the leaderboard</returns>
-        public EmbedBuilder GenerateLeaderboard(TConfig config, FrameworkBot<TConfig, TGuild, TUser> bot, SocketGuild guild = null,
+        public EmbedBuilder GenerateLeaderboard(TConfig config, FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot, SocketGuild guild = null,
             LeaderboardScale scale = LeaderboardScale.Global, EmbedBuilder builder = null, int size = 10,
             Func<TUser, SocketUser, string> fieldFunc = null, Func<EmbedBuilder, EmbedBuilder> formatEmbedFunc = null)
         {
@@ -229,14 +230,14 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Bot = bot;
             return Managers.LongCount(m => m.Value.IsActive) <= 0;
         }
 
         /// <inheritdoc />
-        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             foreach (var channel in Managers.Keys)
             {

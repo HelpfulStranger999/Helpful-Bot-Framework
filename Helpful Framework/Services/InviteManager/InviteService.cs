@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Helpful.Framework.Config;
 using HelpfulUtilities.Extensions;
@@ -10,18 +11,19 @@ using System.Threading.Tasks;
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for seeing what invite a user joined with</summary>
-    public class InviteService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
+    public class InviteService<TConfig, TGuild, TUser, TCommandContext> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, IInviteGuild
         where TUser : class, IConfigUser
+        where TCommandContext : class, ICommandContext
     {
         /// <summary>The framework bot in use</summary>
-        protected FrameworkBot<TConfig, TGuild, TUser> Bot { get; }
+        protected FrameworkBot<TConfig, TGuild, TUser, TCommandContext> Bot { get; }
         /// <summary>Provides a list of all invites' metadata</summary>
         protected HashSet<IInviteMetadata> Invites { get; } = new HashSet<IInviteMetadata>();
 
-        /// <summary>Instantiates a new <see cref="InviteService{TConfig, TGuild, TUser}"/></summary>
-        public InviteService(FrameworkBot<TConfig, TGuild, TUser> client)
+        /// <summary>Instantiates a new <see cref="InviteService{TConfig, TGuild, TUser, TCommandContext}"/></summary>
+        public InviteService(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> client)
         {
             Bot = client;
             client.SocketClient.UserJoined += OnMemberJoin;
@@ -65,9 +67,9 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => true;
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot) => true;
         /// <inheritdoc />
-        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             await Bot.Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
         }

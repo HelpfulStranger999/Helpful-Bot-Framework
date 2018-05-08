@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Helpful.Framework.Services
 {
-    /// <summary>A creature manager for <see cref="CreatureSpawnerService{TConfig, TGuild, TUser}"/></summary>
+    /// <summary>A creature manager for <see cref="CreatureSpawnerService{TConfig, TGuild, TUser, TCommandContext}"/></summary>
     public class CreatureManager
     {
         /// <summary>The message containing the creature</summary>

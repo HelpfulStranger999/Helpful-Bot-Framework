@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord.Commands;
+using Discord.WebSocket;
 using Helpful.Framework.Config;
 using System;
 using System.Linq;
@@ -7,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace Helpful.Framework
 {
-    public abstract partial class FrameworkBot<TConfig, TGuild, TUser>
+    public abstract partial class FrameworkBot<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild
         where TUser : class, IConfigUser
+        where TCommandContext : class, ICommandContext
     {
         /// <summary>Console input event handler</summary>
         public delegate Task ConsoleInputEvent(string line);

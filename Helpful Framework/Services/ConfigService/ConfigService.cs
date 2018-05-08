@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord.Commands;
+using Discord.WebSocket;
 using Helpful.Framework.Config;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,16 +7,17 @@ using System.Threading.Tasks;
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for automatically loading guilds to the config</summary>
-    public sealed class ConfigService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
+    public sealed class ConfigService<TConfig, TGuild, TUser, TCommandContext> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild
         where TUser : class, IConfigUser
+        where TCommandContext : class, ICommandContext
     {
         private BaseSocketClient Client { get; }
         private TConfig Config { get; }
 
-        /// <summary>Instantiates a new <see cref="ConfigService{TConfig, TGuild, TUser}"/></summary>
-        public ConfigService(FrameworkBot<TConfig, TGuild, TUser> bot)
+        /// <summary>Instantiates a new <see cref="ConfigService{TConfig, TGuild, TUser, TCommandContext}"/></summary>
+        public ConfigService(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Client = bot.SocketClient;
             Config = bot.Configuration;
@@ -42,10 +44,10 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => true;
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot) => true;
 
         /// <inheritdoc />
-        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             await Config.Disconnect().ConfigureAwait(false);
         }

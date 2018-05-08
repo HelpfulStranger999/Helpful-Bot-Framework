@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Helpful.Framework.Services
 {
-    /// <summary>A snack event manager for <see cref="SnacksService{TConfig, TGuild, TUser, TEnum}"/></summary>
+    /// <summary>A snack event manager for <see cref="SnacksService{TConfig, TGuild, TUser, TCommandContext, TEnum}"/></summary>
     public class SnackEventManager<TEnum>
         where TEnum : Enum
     {

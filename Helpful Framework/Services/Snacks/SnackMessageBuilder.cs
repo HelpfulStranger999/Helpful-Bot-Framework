@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Helpful.Framework.Services
 {
-    /// <summary>Builds a collection of snack messages and phrases for <see cref="SnacksService{TConfig, TGuild, TUser, TEnum}"/></summary>
+    /// <summary>Builds a collection of snack messages and phrases for <see cref="SnacksService{TConfig, TGuild, TUser, TCommandContext, TEnum}"/></summary>
     public class SnackMessageBuilder<TEnum> where TEnum : Enum
     {
         /// <summary>Default instance of <see cref="SnackMessageBuilder{TEnum}"/></summary>

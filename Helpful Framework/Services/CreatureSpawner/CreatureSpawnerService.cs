@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Helpful.Framework.Config;
 using HelpfulUtilities;
@@ -11,12 +12,13 @@ using Spawner = System.Collections.Concurrent.ConcurrentDictionary<ulong, Helpfu
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for spawning creatures</summary>
-    public class CreatureSpawnerService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
+    public class CreatureSpawnerService<TConfig, TGuild, TUser, TCommandContext> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISpawnerGuild
         where TUser : class, IConfigUser, ISpawnerUser
+        where TCommandContext : class, ICommandContext
     {
-        /// <summary>Provides a default field generator for <see cref="GenerateLeaderboard(TConfig, FrameworkBot{TConfig, TGuild, TUser}, SocketGuild, LeaderboardScale, EmbedBuilder, int, Func{TUser, SocketUser, string}, Func{EmbedBuilder, EmbedBuilder})"/></summary>
+        /// <summary>Provides a default field generator for <see cref="GenerateLeaderboard(TConfig, FrameworkBot{TConfig, TGuild, TUser, TCommandContext}, SocketGuild, LeaderboardScale, EmbedBuilder, int, Func{TUser, SocketUser, string}, Func{EmbedBuilder, EmbedBuilder})"/></summary>
         protected static readonly Func<TUser, SocketUser, string> DefaultLeaderboardFieldFunction = (configUser, socketUser) =>
         {
             return $"{configUser.Creatures} creatures";
@@ -28,8 +30,8 @@ namespace Helpful.Framework.Services
 
         /// <summary>Whether this service is shutting down.</summary>
         protected bool Disconnecting => Bot != null;
-        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser}"/> for this service. Non-null only when shutting down.</summary>
-        protected FrameworkBot<TConfig, TGuild, TUser> Bot { get; set; } = null;
+        /// <summary>The <see cref="FrameworkBot{TConfig, TGuild, TUser, TCommandContext}"/> for this service. Non-null only when shutting down.</summary>
+        protected FrameworkBot<TConfig, TGuild, TUser, TCommandContext> Bot { get; set; } = null;
         /// <summary>A random number generator for generating values.</summary>
         protected AdvancedRandom Random { get; set; } = new AdvancedRandom();
         /// <summary>A mapping of channel ID to creature manager</summary>
@@ -92,7 +94,7 @@ namespace Helpful.Framework.Services
         /// returning the field value of the positions on the leaderboard.</param>
         /// <param name="formatEmbedFunc">A function taking and returning an embed builder for the purpose of customizing it.</param>
         /// <returns>The embed populated with the leaderboard</returns>
-        public EmbedBuilder GenerateLeaderboard(TConfig config, FrameworkBot<TConfig, TGuild, TUser> bot, SocketGuild guild = null,
+        public EmbedBuilder GenerateLeaderboard(TConfig config, FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot, SocketGuild guild = null,
             LeaderboardScale scale = LeaderboardScale.Global, EmbedBuilder builder = null, int size = 10,
             Func<TUser, SocketUser, string> fieldFunc = null, Func<EmbedBuilder, EmbedBuilder> formatEmbedFunc = null)
         {
@@ -121,14 +123,14 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Bot = bot;
             return Spawner.LongCount() <= 0;
         }
 
         /// <inheritdoc />
-        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot)
+        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Spawner.Clear();
             return Task.CompletedTask;

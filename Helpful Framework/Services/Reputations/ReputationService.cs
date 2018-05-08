@@ -1,4 +1,5 @@
-﻿using Helpful.Framework.Config;
+﻿using Discord.Commands;
+using Helpful.Framework.Config;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +8,11 @@ using Reputations = System.Collections.Generic.Dictionary<ulong, System.DateTime
 namespace Helpful.Framework.Services
 {
     /// <summary>Provides a default service for reputation commands</summary>
-    public class ReputationService<TConfig, TGuild, TUser> : IService<TConfig, TGuild, TUser>
+    public class ReputationService<TConfig, TGuild, TUser, TCommandContext> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild
         where TUser : class, IConfigUser, IReputation
+        where TCommandContext : class, ICommandContext
     {
         /// <summary>The configuration object to use</summary>
         protected TConfig Config { get; }
@@ -26,11 +28,11 @@ namespace Helpful.Framework.Services
         /// <param name="config">The implementation of <see cref="IConfig{IGuild, IUser}"/></param>
         /// <param name="cooldown">The cooldown between reputations. Default to one day.</param>
         /// <param name="reps">The number of reputation points available per user per cooldown period</param>
-        public ReputationService(TConfig config, TimeSpan cooldown = default(TimeSpan), int reps = 1)
+        public ReputationService(TConfig config, TimeSpan cooldown = default, int reps = 1)
         {
             Config = config;
             RepsCount = reps;
-            Cooldown = cooldown == default(TimeSpan) ?
+            Cooldown = cooldown == default ?
                 TimeSpan.FromDays(1) : cooldown;
         }
 
@@ -115,8 +117,8 @@ namespace Helpful.Framework.Services
         }
 
         /// <inheritdoc />
-        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => true;
+        public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot) => true;
         /// <inheritdoc />
-        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser> bot) => Task.CompletedTask;
+        public Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot) => Task.CompletedTask;
     }
 }

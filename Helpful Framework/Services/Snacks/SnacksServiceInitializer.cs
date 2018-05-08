@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Commands;
 using Helpful.Framework.Config;
 using HelpfulUtilities;
 using HelpfulUtilities.Extensions;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace Helpful.Framework.Services
 {
-    public partial class SnacksService<TConfig, TGuild, TUser, TEnum> : IService<TConfig, TGuild, TUser>
+    public partial class SnacksService<TConfig, TGuild, TUser, TCommandContext, TEnum> : IService<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild, ISnacksGuild
         where TUser : class, IConfigUser, ISnacksUser<TEnum>
+        where TCommandContext : class, ICommandContext
         where TEnum : Enum
     {
         /// <summary>A map of the snack type to the snacks name.</summary>

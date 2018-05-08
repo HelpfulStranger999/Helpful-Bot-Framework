@@ -20,10 +20,11 @@ using HelpfulUtilities.Discord.Extensions;
 namespace Helpful.Framework
 {
     /// <summary>A base framework bot for Discord bots employing the Discord.NET API wrapper</summary>
-    public abstract partial class FrameworkBot<TConfig, TGuild, TUser>
+    public abstract partial class FrameworkBot<TConfig, TGuild, TUser, TCommandContext>
         where TConfig : class, IConfig<TGuild, TUser>
         where TGuild : class, IConfigGuild
         where TUser : class, IConfigUser
+        where TCommandContext : class, ICommandContext
     {
         /// <summary>A base bot config</summary>
         public FrameworkBotConfig BotConfig;
@@ -42,7 +43,7 @@ namespace Helpful.Framework
         /// <summary>A list of service types and whether they have disconnected</summary>
         public ConcurrentDictionary<Type, bool> DisconnectList { get; protected set; } = new ConcurrentDictionary<Type, bool>();
         /// <summary>A list of services</summary>
-        protected internal IList<IService<TConfig, TGuild, TUser>> ServiceList { get; protected set; } = new List<IService<TConfig, TGuild, TUser>>();
+        protected internal IList<IService<TConfig, TGuild, TUser, TCommandContext>> ServiceList { get; protected set; } = new List<IService<TConfig, TGuild, TUser, TCommandContext>>();
         /// <summary>A list of type readers</summary>
         protected Dictionary<Type, TypeReader> TypeReaders { get; } = new Dictionary<Type, TypeReader>
         {
@@ -75,7 +76,7 @@ namespace Helpful.Framework
         public abstract Task UnloadAsync();
 
         /// <summary>Constructs a context given a <see cref="IUserMessage"/></summary>
-        public abstract ICommandContext CreateContext(IUserMessage message);
+        public abstract TCommandContext CreateContext(IUserMessage message);
         /// <summary>Handles the result of a listener of command operation</summary>
         public abstract Task HandleResult(ICommandContext context, IResult result, bool command = true);
 
@@ -254,14 +255,14 @@ namespace Helpful.Framework
         }
 
         /// <summary>Marks the specified service as ready to disconnect</summary>
-        public void Ready<TService>() where TService : IService<TConfig, TGuild, TUser>
+        public void Ready<TService>() where TService : IService<TConfig, TGuild, TUser, TCommandContext>
             => Ready(typeof(TService));
 
         /// <summary>Marks the specified service as ready to disconnnect</summary>
         public void Ready(Type type)
         {
-            if (!type.Extends(typeof(IService<TConfig, TGuild, TUser>))) throw new
-                    InvalidCastException($"Cannot cast {type.FullName} to {typeof(IService<TConfig, TGuild, TUser>).FullName}");
+            if (!type.Extends(typeof(IService<TConfig, TGuild, TUser, TCommandContext>))) throw new
+                    InvalidCastException($"Cannot cast {type.FullName} to {typeof(IService<TConfig, TGuild, TUser, TCommandContext>).FullName}");
             DisconnectList[type] = false;
         }
     }
