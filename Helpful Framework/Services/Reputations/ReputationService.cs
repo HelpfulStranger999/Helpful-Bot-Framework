@@ -54,8 +54,9 @@ namespace Helpful.Framework.Services
         /// <summary>Returns the number of currently available reputation points.</summary>
         public int AvailableReputation(ulong id)
         {
+            var times = GetOrCreateUser(id);
             var now = DateTimeOffset.Now;
-            return GetOrCreateUser(id).Count(time => time <= now);
+            return times.Count(time => time <= now);
         }
 
         /// <summary>Gives</summary>

@@ -1,14 +1,16 @@
+using Helpful.Framework;
 using Helpful.Framework.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.Linq;
-using Xunit;
 
-namespace Helpful.Framework.Tests
+namespace Unit_Tests
 {
+    [TestClass]
     public class ConfigTests
     {
-        [Fact]
-        public void Serializer()
+        [TestMethod]
+        public void SerializerTest()
         {
             var config = new FrameworkBotConfig();
             var json = config.Serialize(settings =>
@@ -16,7 +18,7 @@ namespace Helpful.Framework.Tests
                 settings.Formatting = Formatting.Indented;
             });
 
-            Assert.InRange(json.Split('\n').Count(), 0, 1000);
+            Assert.IsTrue(json.Split('\n').Count() <= 1000);
         }
     }
 }
