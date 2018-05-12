@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Helpful.Framework.Utils;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace Helpful.Framework.Config
@@ -10,9 +10,9 @@ namespace Helpful.Framework.Config
         where TGuild : IConfigGuild where TUser : IConfigUser
     {
         /// <summary>Provides a mapping of guild ID to the corresponding config object.</summary>
-        IDictionary<ulong, TGuild> Guilds { get; set; }
+        ConcurrentDictionary<ulong, TGuild> Guilds { get; set; }
         /// <summary>Provides a mapping of user ID to the corresponding config object.</summary>
-        IDictionary<ulong, TUser> Users { get; set; }
+        ConcurrentDictionary<ulong, TUser> Users { get; set; }
 
         /// <summary>Asynchronously connects to the database</summary>
         Task Connect();
