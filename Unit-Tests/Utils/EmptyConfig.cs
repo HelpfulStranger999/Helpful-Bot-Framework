@@ -2,6 +2,7 @@
 using Helpful.Framework.Config;
 using Helpful.Framework.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace Unit_Tests.Utils
 {
     internal class EmptyConfig : IConfig<EmptyConfigGuild, EmptyConfigUser>
     {
-        public IDictionary<ulong, EmptyConfigGuild> Guilds { get; set; } = new Dictionary<ulong, EmptyConfigGuild>();
-        public IDictionary<ulong, EmptyConfigUser> Users { get; set; } = new Dictionary<ulong, EmptyConfigUser>();
+        public ConcurrentDictionary<ulong, EmptyConfigGuild> Guilds { get; set; } = new ConcurrentDictionary<ulong, EmptyConfigGuild>();
+        public ConcurrentDictionary<ulong, EmptyConfigUser> Users { get; set; } = new ConcurrentDictionary<ulong, EmptyConfigUser>();
 
         public Task Connect()
         {
