@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Helpful.Framework.Config;
 using System;
 using System.Linq;
@@ -61,11 +62,11 @@ namespace Helpful.Framework.Services
 
         /// <summary>Gives</summary>
         /// <returns></returns>
-        public async Task<ReputationResult> RepUser(ulong user, ulong userRepped)
+        public async Task<ReputationResult> RepUser(ulong user, IUser userRepped)
         {
             if (CanRep(user))
             {
-                Config.Users[userRepped].Reputation++;
+                Config.Users.GetOrAdd(userRepped.Id, await Config.Create(userRepped)).Reputation++;
                 await Config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
                 var nextRep = GenerateCooldown();
                 UpdateUser(user, nextRep);
