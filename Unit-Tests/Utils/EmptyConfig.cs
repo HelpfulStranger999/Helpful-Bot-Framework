@@ -41,7 +41,7 @@ namespace Unit_Tests.Utils
 
         public Task<ResultOperation> WriteAsync(DatabaseType type)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(ResultOperation.FromSuccess());
         }
     }
 }
