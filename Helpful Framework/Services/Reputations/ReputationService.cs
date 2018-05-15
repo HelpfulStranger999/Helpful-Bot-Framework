@@ -67,7 +67,7 @@ namespace Helpful.Framework.Services
             if (CanRep(user))
             {
                 if (!Config.Users.TryGetValue(userRepped.Id, out var configUser))
-                    Config.Users.TryAdd(userRepped.Id, (configUser = await Config.Create(userRepped)));
+                    configUser = await Config.Create(userRepped);
 
                 configUser.Reputation++;
                 await Config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
