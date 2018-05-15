@@ -5,12 +5,13 @@ using System.Text;
 
 namespace Unit_Tests.Utils
 {
-    internal class EmptyConfigGuild : IConfigGuild, ISpawnerGuild
+    internal class EmptyConfigGuild : IConfigGuild, ISpawnerGuild, ISnacksGuild
     {
         public ulong Id { get; set; }
         public string Prefix { get; set; }
         public double Frequency { get; set; } = 0.04;
         public ulong Duration { get; set; } = 30_000;
         public IList<ulong> CreatureChannels { get; set; } = new List<ulong>();
+        public IDictionary<ulong, ISnacksChannelConfig> Snacks { get; } = new Dictionary<ulong, ISnacksChannelConfig>();
     }
 }
