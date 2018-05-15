@@ -93,7 +93,7 @@ namespace Helpful.Framework.Services
         /// <summary>Returns if an event can be started in the specified channel</summary>
         public bool CanStartEvent(ulong channelId)
         {
-            return !Disconnecting && IsActive(channelId);
+            return !Disconnecting && !IsActive(channelId);
         }
 
         /// <summary>Returns if an event has started in the specified channel</summary>
