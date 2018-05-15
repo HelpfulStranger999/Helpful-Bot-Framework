@@ -10,6 +10,6 @@ namespace Helpful.Framework.Config
         /// <summary>How long each creature should last before wandering away</summary>
         ulong Duration { get; set; }
         /// <summary>A list of channel IDs creatures can spawn in</summary>
-        IList<ulong> Channels { get; set; }
+        IList<ulong> CreatureChannels { get; set; }
     }
 }
