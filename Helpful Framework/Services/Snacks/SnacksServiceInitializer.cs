@@ -92,15 +92,15 @@ namespace Helpful.Framework.Services
         /// <summary>Generates a random delay based on the <see cref="ISnacksChannelConfig"/> passed.</summary>
         public virtual ulong GenerateDelay(ISnacksChannelConfig config)
         {
-            var variance = Random.Next(0, config.DelayVariance + 1);
-            return Operations.PlusMinus(config.Delay, variance);
+            return Random.Next(Math.Max(config.Delay - config.DelayVariance, 1),
+                config.Delay + config.DelayVariance + 1);
         }
 
         /// <summary>Generates a random duration based on the <see cref="ISnacksChannelConfig"/> passed.</summary>
         public virtual ulong GenerateDuration(ISnacksChannelConfig config)
         {
-            var variance = Random.Next(0, config.Duration + 1);
-            return Operations.PlusMinus(config.Duration, variance);
+            return Random.Next(Math.Max(config.Duration - config.DurationVariance, 1),
+                config.Duration + config.DurationVariance + 1);
         }
 
         /// <summary>Generates a random amount based on the <see cref="ISnacksChannelConfig"/> 
@@ -129,8 +129,9 @@ namespace Helpful.Framework.Services
         /// and <see cref="ITextChannel"/> passed</summary>
         protected virtual async Task<ulong> GeneratePotSizeAsync(ISnacksChannelConfig config, ITextChannel channel)
         {
-            var pot = config.EarlyBirdPot;
-            var variance = Random.Next(0, config.EarlyBirdPotVariance);
+            var pot = Random.Next(Math.Max(config.EarlyBirdPot - config.EarlyBirdPotVariance, 1),
+                config.EarlyBirdPot + config.EarlyBirdPotVariance + 1);
+
             var users = (await channel.GetUsersAsync().FlattenAsync().ConfigureAwait(false)).Where(user =>
             {
                 return !user.IsBot && !user.IsWebhook
@@ -138,9 +139,7 @@ namespace Helpful.Framework.Services
                         && user.Status != UserStatus.Invisible;
             });
 
-            var earlyBirdPot = Operations.PlusMinus(pot, variance);
-
-            return (ulong)users.LongCount() * earlyBirdPot;
+            return (ulong)users.LongCount() * pot;
         }
     }
 }
