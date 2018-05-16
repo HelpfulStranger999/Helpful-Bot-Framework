@@ -66,8 +66,7 @@ namespace Helpful.Framework.Services
         public async Task<bool> Despawn(ulong channelId, TConfig config, TUser user)
         {
             if (!AnyLoose(channelId)) return false;
-            await Spawner[channelId].Creature.DeleteAsync().ConfigureAwait(false);
-            Spawner[channelId].Despawner.Change(Timeout.Infinite, Timeout.Infinite);
+            await Spawner[channelId].Despawn();
 
             if (user != null)
             {
