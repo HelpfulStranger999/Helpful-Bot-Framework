@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>Helpful.Framework</RootNamespace>
+    <PackageId>Helpful.Framework</PackageId>
+    <Authors>HelpfulStranger999</Authors>
+    <PackageProjectUrl>https://github.com/HelpfulStranger999/Helpful-Bot-Framework</PackageProjectUrl>
+    <RepositoryUrl>git://github.com/HelpfulStranger999/Helpful-Bot-Framework</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>- Improves snack algorithm, also fixes bug
+- Squashes that bug-that-prevents-creatures-from-spawning-after-the-first-creature-in-that-channel nice and flat</PackageReleaseNotes>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageTags>discord, discordapp</PackageTags>
+    <Description>This package provides a useful base for designing your Discord bots</Description>
+    <Version>0.2.6-alpha</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>0.2.6.0</AssemblyVersion>
+    <FileVersion>0.2.6.0</FileVersion>
+    <Company>HelpfulStranger999</Company>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Helpful Framework.xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00940" />
+    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00940" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00940" />
+    <PackageReference Include="HelpfulUtilities" Version="1.1.1-alpha" />
+    <PackageReference Include="HelpfulUtilities.Discord" Version="1.0.4-beta" />
+    <PackageReference Include="HelpfulUtilities.Discord.Commands" Version="1.0.11-alpha" />
+    <PackageReference Include="HelpfulUtilities.Discord.Listeners" Version="1.0.14-alpha" />
+  </ItemGroup>
+
+</Project>
