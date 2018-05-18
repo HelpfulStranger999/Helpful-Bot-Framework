@@ -124,7 +124,7 @@ namespace Helpful.Framework
             foreach (var pair in TypeReaders)
                 CommandService.AddTypeReader(pair.Key, pair.Value, true);
 
-            ListenerService.AddModules(Assembly.GetAssembly(GetType()));
+            await ListenerService.AddModulesAsync(Assembly.GetAssembly(GetType())).ConfigureAwait(false);
             await CommandService.AddModulesAsync(Assembly.GetAssembly(GetType()), ServiceProvider).ConfigureAwait(false);
 
             SocketClient.MessageReceived += MessageReceivedHandler;
@@ -189,7 +189,7 @@ namespace Helpful.Framework
                 await CommandService.RemoveModuleAsync(module).ConfigureAwait(false);
 
             foreach (var listener in ListenerService.Listeners)
-                ListenerService.RemoveModule(listener);
+                await ListenerService.RemoveModuleAsync(listener).ConfigureAwait(false);
 
             CommandService = null;
             ListenerService = null;
