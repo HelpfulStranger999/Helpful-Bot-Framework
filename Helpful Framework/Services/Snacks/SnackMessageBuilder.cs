@@ -123,8 +123,8 @@ namespace Helpful.Framework.Services
 
         private static readonly string[] _nopeople = new string[]
         {
-            "I guess nobody wants snacks... more for me!`",
-            "Guess nobody's here.. I'll just head out then`",
+            "I guess nobody wants snacks... more for me!",
+            "Guess nobody's here.. I'll just head out then",
             "I don't see anybody.. <.< ... >.> ... All the snacks for me!!",
             "I guess nobody wants snacks huh.. Well, I'll come back later",
             "I guess i'll just come back later.."
