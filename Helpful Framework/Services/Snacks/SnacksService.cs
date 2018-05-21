@@ -7,6 +7,7 @@ using HelpfulUtilities.Discord.Extensions;
 using HelpfulUtilities.Extensions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -120,6 +121,14 @@ namespace Helpful.Framework.Services
             return default;
         }
 
+        /// <summary>Gets the list of users already snacked in the specified channel</summary>
+        public List<ulong> GetUsers(ulong channelId)
+        {
+            if (Managers.TryGetValue(channelId, out var manager))
+                return manager.Users;
+            return new List<ulong>();
+        }
+
         /// <summary>Extending on <see cref="HandleSnackRequestAsync(IUserMessage, TConfig)"/> to send appropriate messages</summary>
         public async Task<(SnackRequestType Type, ulong Amount)> HandleMessageAsync(IUserMessage message, TConfig config)
         {
@@ -166,10 +175,14 @@ namespace Helpful.Framework.Services
                         user.Snacks[snack] = amount;
 
                     await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
+
+                    manager.Users.Add(message.Author.Id);
                     return (type, amount);
                 case SnackRequestType.Rude:
                     config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += 1;
                     await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
+
+                    manager.Users.Add(message.Author.Id);
                     return (type, 1);
                 default:
                     return (type, 0);
