@@ -37,14 +37,20 @@ namespace Helpful.Framework.Services
         /// <summary>A mapping of channel ID to creature manager</summary>
         protected Spawner Spawner { get; } = new Spawner();
 
-        /// <summary>Returns whether a creature should be spawned in the specified channel</summary>
-        public virtual bool ShouldSpawn(TGuild guild, ulong channelID) => CanSpawn(channelID) && Random.NextDouble() <= guild.Frequency;
         /// <summary>Returns whether any creatures can spawn in the specified channel</summary>
         public bool CanSpawn(ulong channelID) => !Disconnecting && !AnyLoose(channelID);
         /// <summary>Returns whether there are any loose creatures in the specified channel</summary>
         public bool AnyLoose(ulong channelID) => GetCreature(channelID) != null;
         /// <summary>Returns the message containing the creature in the specified channel</summary>
         public IUserMessage GetCreature(ulong channelID) => Spawner.GetOrAdd(channelID, new CreatureManager()).Creature;
+
+        /// <summary>Returns whether a creature should be spawned in the specified channel</summary>
+        public virtual bool ShouldSpawn(TGuild guild, ulong channelID) 
+        {
+            if (!CanSpawn(channelID)) return false;
+            if (!guild.CreatureChannels.Contains(channelID)) return false;
+            return Random.NextDouble() <= guild.Frequency;
+        }
 
         /// <summary>Spawns a creature with the specified message and the specified guild.</summary>
         public bool Spawn(ISpawnerGuild guild, IUserMessage message)
