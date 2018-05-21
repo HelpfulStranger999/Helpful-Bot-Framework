@@ -79,11 +79,11 @@ namespace Helpful.Framework.Services
         /// <summary>Stops the snack event running in the specified channel.</summary>
         public async Task StopEvent(ITextChannel channel)
         {
-            var snack = Managers[channel.Id].Snack;
-            await channel.SendMessageAsync(Managers[channel.Id].Users.Any() ?
-                Departure(snack) : NoPeople(snack)).ConfigureAwait(false);
+            if (!Managers.TryGetValue(channel.Id, out var manager)) return;
+            await channel.SendMessageAsync(manager.Users.Count() > 0 ?
+                Departure(manager.Snack) : NoPeople(manager.Snack)).ConfigureAwait(false);
 
-            Managers[channel.Id].Reset();
+            manager.Reset();
             if (CanDisconnect(Bot))
             {
                 Bot.DisconnectList[GetType()] = false;
@@ -156,7 +156,15 @@ namespace Helpful.Framework.Services
                 case SnackRequestType.Request:
                     var snacksConfig = config.Guilds[message.GetGuild().Id].Snacks[message.Channel.Id];
                     var amount = GenerateAmount(snacksConfig, manager);
-                    config.Users[message.Author.Id].Snacks[GetSnack(message.Channel.Id)] += amount;
+                    if (!config.Users.TryGetValue(message.Author.Id, out var user))
+                        await config.Create(message.Author).ConfigureAwait(false);
+
+                    var snack = GetSnack(message.Channel.Id);
+                    if (user.Snacks.ContainsKey(snack))
+                        user.Snacks[snack] += amount;
+                    else
+                        user.Snacks[snack] = amount;
+
                     await config.WriteAsync(DatabaseType.User).ConfigureAwait(false);
                     return (type, amount);
                 case SnackRequestType.Rude:

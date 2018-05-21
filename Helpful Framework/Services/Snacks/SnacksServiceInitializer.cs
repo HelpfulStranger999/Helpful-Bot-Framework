@@ -79,15 +79,15 @@ namespace Helpful.Framework.Services
 
         /// <summary>Returns a random give message based off snack type, username, and amount of snacks</summary>
         public string Give(TEnum snack, string user, ulong amount)
-            => string.Format($"{Faces[snack]} {GiveMessages[snack].Random()}", amount, user, Names[snack]);
+            => string.Concat(Faces[snack], " ", string.Format(GiveMessages[snack].Random(), amount, user, Names[snack]));
 
         /// <summary>Returns a random rude message based off snack type and username</summary>
         public string Greed(TEnum snack, string user)
-            => string.Format($"{Faces[snack]} {GreedMessages[snack].Random()}", user, Names[snack]);
+            => string.Concat(Faces[snack], " ", string.Format(GreedMessages[snack].Random(), user, Names[snack]));
 
         /// <summary>Returns a random rude message based off snack type and username</summary>
         public string Rude(TEnum snack, string user)
-            => string.Format($"{Faces[snack]} {RudeMessages[snack].Random()}", user, Names[snack]);
+            => string.Concat(Faces[snack], " ", string.Format(RudeMessages[snack].Random(), user, Names[snack]));
 
         /// <summary>Generates a random delay based on the <see cref="ISnacksChannelConfig"/> passed.</summary>
         public virtual ulong GenerateDelay(ISnacksChannelConfig config)
