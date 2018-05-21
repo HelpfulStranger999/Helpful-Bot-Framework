@@ -45,7 +45,7 @@ namespace Helpful.Framework.Services
         public IUserMessage GetCreature(ulong channelID) => Spawner.GetOrAdd(channelID, new CreatureManager()).Creature;
 
         /// <summary>Returns whether a creature should be spawned in the specified channel</summary>
-        public virtual bool ShouldSpawn(TGuild guild, ulong channelID) 
+        public virtual bool ShouldSpawn(TGuild guild, ulong channelID)
         {
             if (!CanSpawn(channelID)) return false;
             if (!guild.CreatureChannels.Contains(channelID)) return false;

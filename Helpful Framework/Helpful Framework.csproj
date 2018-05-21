@@ -8,14 +8,14 @@
     <PackageProjectUrl>https://github.com/HelpfulStranger999/Helpful-Bot-Framework</PackageProjectUrl>
     <RepositoryUrl>git://github.com/HelpfulStranger999/Helpful-Bot-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Updates, cleanup, and updates</PackageReleaseNotes>
+    <PackageReleaseNotes>- Improvements, bug fixes, cleanup</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>discord, discordapp</PackageTags>
     <Description>This package provides a useful base for designing your Discord bots</Description>
-    <Version>0.2.7-alpha</Version>
+    <Version>0.2.8-alpha</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.2.7.0</AssemblyVersion>
-    <FileVersion>0.2.7.0</FileVersion>
+    <AssemblyVersion>0.2.8.0</AssemblyVersion>
+    <FileVersion>0.2.8.0</FileVersion>
     <Company>HelpfulStranger999</Company>
   </PropertyGroup>
 
