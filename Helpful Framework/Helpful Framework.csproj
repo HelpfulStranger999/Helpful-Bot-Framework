@@ -8,15 +8,15 @@
     <PackageProjectUrl>https://github.com/HelpfulStranger999/Helpful-Bot-Framework</PackageProjectUrl>
     <RepositoryUrl>git://github.com/HelpfulStranger999/Helpful-Bot-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Fixes bug where infinite snack requests can be made
-- Exposes snacked users</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixes bug bot crashing on snacktime end
+- Fixes bugs on bot disconnecting</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>discord, discordapp</PackageTags>
     <Description>This package provides a useful base for designing your Discord bots</Description>
-    <Version>0.2.9-alpha</Version>
+    <Version>0.2.10-alpha</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.2.9.0</AssemblyVersion>
-    <FileVersion>0.2.9.0</FileVersion>
+    <AssemblyVersion>0.2.10.0</AssemblyVersion>
+    <FileVersion>0.2.10.0</FileVersion>
     <Company>HelpfulStranger999</Company>
   </PropertyGroup>
 
@@ -37,7 +37,7 @@
     <PackageReference Include="HelpfulUtilities" Version="1.2.0-alpha" />
     <PackageReference Include="HelpfulUtilities.Discord" Version="1.0.5-beta" />
     <PackageReference Include="HelpfulUtilities.Discord.Commands" Version="1.1.0-alpha" />
-    <PackageReference Include="HelpfulUtilities.Discord.Listeners" Version="1.1.0-alpha" />
+    <PackageReference Include="HelpfulUtilities.Discord.Listeners" Version="1.1.2-alpha" />
   </ItemGroup>
 
 </Project>

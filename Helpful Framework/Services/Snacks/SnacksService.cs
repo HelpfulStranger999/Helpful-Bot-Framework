@@ -85,7 +85,7 @@ namespace Helpful.Framework.Services
                 Departure(manager.Snack) : NoPeople(manager.Snack)).ConfigureAwait(false);
 
             manager.Reset();
-            if (CanDisconnect(Bot))
+            if (Disconnecting && CanDisconnect(Bot))
             {
                 Bot.DisconnectList[GetType()] = false;
             }
@@ -254,16 +254,20 @@ namespace Helpful.Framework.Services
         public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Bot = bot;
-            return Managers.LongCount(m => m.Value.IsActive) <= 0;
+            return Managers.Values.LongCount(m => m.IsActive) <= 0;
         }
 
         /// <inheritdoc />
         public async Task Disconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
-            foreach (var channel in Managers.Keys)
+            Bot = bot;
+            foreach (var pair in Managers)
             {
-                var msgChannel = bot.SocketClient.GetChannel(channel) as ITextChannel;
-                await StopEvent(msgChannel).ConfigureAwait(false);
+                if (pair.Value.IsActive)
+                {
+                    var msgChannel = bot.SocketClient.GetChannel(pair.Key) as ITextChannel;
+                    await StopEvent(msgChannel).ConfigureAwait(false);
+                }
             }
         }
     }
