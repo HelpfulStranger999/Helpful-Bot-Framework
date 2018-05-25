@@ -34,14 +34,11 @@ namespace Helpful.Framework.Services
         protected ConcurrentDictionary<ulong, SnackEventManager<TEnum>> Managers { get; } = new ConcurrentDictionary<ulong, SnackEventManager<TEnum>>();
 
         /// <summary>Attempts to begin a snack event with the specified config in the specified context.</summary>
-        public async Task<bool> TryStartEvent(TConfig config, ICommandContext context)
+        public bool TryStartEvent(TConfig config, ICommandContext context)
         {
-            if (context.Guild == null ||
-                !config.Guilds[context.Guild.Id].Snacks.ContainsKey(context.Channel.Id)
-                || !CanStartEvent(context.Channel.Id))
-            {
-                return false;
-            }
+            if (context.Guild == null) return false;
+            if (!config.Guilds[context.Guild.Id].Snacks.ContainsKey(context.Channel.Id)) return false;
+            if (!CanStartEvent(context.Channel.Id)) return false;
 
             var channel = context.Channel as ITextChannel;
             var snacksConfig = config.Guilds[context.Guild.Id].Snacks[context.Channel.Id];
@@ -50,11 +47,11 @@ namespace Helpful.Framework.Services
             if (snacksConfig.MessagesRequired <= ++manager.Messages && CanStartEvent(channel.Id))
             {
                 manager.HasBegun = true;
-                await Task.Run(async () =>
+                manager.StartTimer = new Timer(async _ =>
                 {
-                    await Operations.DelayAsync(GenerateDelay(snacksConfig)).ConfigureAwait(false);
                     await StartEvent(channel, snacksConfig, Snack()).ConfigureAwait(false);
-                }).ConfigureAwait(false);
+                }, null, TimeSpan.FromMilliseconds(GenerateDelay(snacksConfig)), Timeout.InfiniteTimeSpan);
+
                 return true;
             }
 
@@ -64,6 +61,7 @@ namespace Helpful.Framework.Services
         /// <summary>Begins a snack event in the specified channel with the specified config and the specified snack type.</summary>
         public async Task StartEvent(ITextChannel channel, ISnacksChannelConfig config, TEnum snack)
         {
+            if (IsActive(channel.Id)) return;
             var manager = Managers.GetOrAdd(channel.Id, new SnackEventManager<TEnum>());
             manager.Pot = await GeneratePotSizeAsync(config, channel).ConfigureAwait(false);
             manager.IsActive = true;
@@ -94,7 +92,7 @@ namespace Helpful.Framework.Services
         /// <summary>Returns if an event can be started in the specified channel</summary>
         public bool CanStartEvent(ulong channelId)
         {
-            return !Disconnecting && !IsActive(channelId);
+            return !Disconnecting && !IsStarted(channelId) && !IsActive(channelId);
         }
 
         /// <summary>Returns if an event has started in the specified channel</summary>

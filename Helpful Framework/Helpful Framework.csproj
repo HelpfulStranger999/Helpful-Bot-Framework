@@ -8,15 +8,15 @@
     <PackageProjectUrl>https://github.com/HelpfulStranger999/Helpful-Bot-Framework</PackageProjectUrl>
     <RepositoryUrl>git://github.com/HelpfulStranger999/Helpful-Bot-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Fixes bug bot crashing on snacktime end
-- Fixes bugs on bot disconnecting</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixes bugs in InviteService
+- Updates Discord.Net</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>discord, discordapp</PackageTags>
     <Description>This package provides a useful base for designing your Discord bots</Description>
-    <Version>0.2.10-alpha</Version>
+    <Version>0.2.12-alpha</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.2.10.0</AssemblyVersion>
-    <FileVersion>0.2.10.0</FileVersion>
+    <AssemblyVersion>0.2.12.0</AssemblyVersion>
+    <FileVersion>0.2.12.0</FileVersion>
     <Company>HelpfulStranger999</Company>
   </PropertyGroup>
 
@@ -31,10 +31,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00940" />
-    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00940" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00940" />
-    <PackageReference Include="HelpfulUtilities" Version="1.2.0-alpha" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00950" />
+    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00950" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00950" />
+    <PackageReference Include="HelpfulUtilities" Version="1.2.2-alpha" />
     <PackageReference Include="HelpfulUtilities.Discord" Version="1.0.5-beta" />
     <PackageReference Include="HelpfulUtilities.Discord.Commands" Version="1.1.0-alpha" />
     <PackageReference Include="HelpfulUtilities.Discord.Listeners" Version="1.1.2-alpha" />

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Helpful.Framework.Services
 {
@@ -30,6 +31,9 @@ namespace Helpful.Framework.Services
 
         /// <summary>How many people have been given snacks so far</summary>
         public List<ulong> Users { get; } = new List<ulong>();
+
+        /// <summary>The timer for beginning the event</summary>
+        public Timer StartTimer { get; set; }
 
         /// <summary>The timer for ending the event</summary>
         public Timer EndTimer { get; set; }
