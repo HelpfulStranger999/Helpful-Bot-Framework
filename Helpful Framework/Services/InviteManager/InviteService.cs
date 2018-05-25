@@ -6,6 +6,7 @@ using HelpfulUtilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Helpful.Framework.Services
@@ -20,18 +21,23 @@ namespace Helpful.Framework.Services
         /// <summary>The framework bot in use</summary>
         protected FrameworkBot<TConfig, TGuild, TUser, TCommandContext> Bot { get; }
         /// <summary>Provides a list of all invites' metadata</summary>
-        protected HashSet<IInviteMetadata> Invites { get; } = new HashSet<IInviteMetadata>();
+        protected HashSet<IInviteMetadata> Invites { get; private set; }
+        /// <summary>Polls the API and caches any new invites every 30 minutes</summary>
+        public Timer Poll { get; }
 
         /// <summary>Instantiates a new <see cref="InviteService{TConfig, TGuild, TUser, TCommandContext}"/></summary>
         public InviteService(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> client)
         {
             Bot = client;
+            Poll = new Timer(async _ => await LoadInvites(), null, TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(30));
+
             client.SocketClient.UserJoined += OnMemberJoin;
             client.Ready(LoadInvites);
         }
 
         private async Task LoadInvites()
         {
+            Invites = new HashSet<IInviteMetadata>();
             foreach (var guild in Bot.SocketClient.Guilds.Where(g => g.CurrentUser.GuildPermissions.ManageGuild))
             {
                 Invites.AddRange(await guild.GetInvitesAsync().ConfigureAwait(false));
@@ -50,6 +56,10 @@ namespace Helpful.Framework.Services
                     Invites.Add(invite);
                     Bot.Configuration.Guilds[user.Guild.Id].Invites[invite.Inviter.Id]++;
                     await Bot.Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
+                }
+                else if (oldInvite == null)
+                {
+                    // Nothing to do
                 }
                 else if (oldInvite.Uses < invite.Uses)
                 {
