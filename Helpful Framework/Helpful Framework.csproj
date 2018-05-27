@@ -8,15 +8,15 @@
     <PackageProjectUrl>https://github.com/HelpfulStranger999/Helpful-Bot-Framework</PackageProjectUrl>
     <RepositoryUrl>git://github.com/HelpfulStranger999/Helpful-Bot-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>- Fixes bugs in InviteService
-- Updates Discord.Net</PackageReleaseNotes>
+    <PackageReleaseNotes>- Increases flexibility in FrameworkBot
+- Reworks some stopping logic to work better</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>discord, discordapp</PackageTags>
     <Description>This package provides a useful base for designing your Discord bots</Description>
-    <Version>0.2.12-alpha</Version>
+    <Version>0.2.13-alpha</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.2.12.0</AssemblyVersion>
-    <FileVersion>0.2.12.0</FileVersion>
+    <AssemblyVersion>0.2.13.0</AssemblyVersion>
+    <FileVersion>0.2.13.0</FileVersion>
     <Company>HelpfulStranger999</Company>
   </PropertyGroup>
 

@@ -100,6 +100,7 @@ namespace Helpful.Framework
                 ContextFactory = CreateContext
             });
 
+            RegisterLogs();
 
             var collection = new ServiceCollection();
             collection.AddSingleton(SocketClient.GetType(), SocketClient)
@@ -121,14 +122,13 @@ namespace Helpful.Framework
 
             ServiceProvider = BuildServices(collection, deps);
 
-            foreach (var pair in TypeReaders)
-                CommandService.AddTypeReader(pair.Key, pair.Value, true);
+            RegisterTypeReaders();
 
             await ListenerService.AddModulesAsync(Assembly.GetAssembly(GetType())).ConfigureAwait(false);
             await CommandService.AddModulesAsync(Assembly.GetAssembly(GetType()), ServiceProvider).ConfigureAwait(false);
 
-            SocketClient.MessageReceived += MessageReceivedHandler;
-            Ready(ReadyHandler);
+            SocketClient.MessageReceived += DefaultMessageReceivedHandler;
+            Ready(DefaultReadyHandler);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Helpful.Framework
                 });
 
                 await Task.WhenAny(Task.WhenAll(DisconnectList.Keys.Select(type =>
-                    Task.Run(() => DisconnectList[type]))), Task.Delay(timeout.Value)).ConfigureAwait(false);
+                    Task.FromResult(DisconnectList[type]))), Task.Delay(timeout.Value)).ConfigureAwait(false);
             }
 
             if (ServiceList.LongCount() >= 0)
@@ -200,58 +200,6 @@ namespace Helpful.Framework
 
             SocketClient = null;
             Configuration = null;
-        }
-
-        /// <summary>Default handling of ready events</summary>
-        public async Task ReadyHandler()
-        {
-            var guilds = SocketClient.Guilds.Where(g => !Configuration.Guilds.ContainsKey(g.Id));
-
-            foreach (var guild in guilds)
-                await Configuration.Create(guild).ConfigureAwait(false);
-
-            if (guilds.LongCount() > 0)
-                await Configuration.WriteAsync(DatabaseType.Guild).ConfigureAwait(false);
-        }
-
-        /// <summary>Default handling of messages</summary>
-        public async Task MessageReceivedHandler(SocketMessage msg)
-        {
-            if (msg.Author.IsWebhook || msg.Author.Id == SocketClient.CurrentUser.Id) { return; }
-
-            if (msg is SocketUserMessage message)
-            {
-                var pos = 0;
-                var prefix = BotConfig.Prefix;
-                var context = CreateContext(message);
-
-                if (message.Channel is SocketTextChannel)
-                    prefix = Configuration.Guilds[message.GetGuild().Id].Prefix;
-
-                if (message.HasPrefix(prefix, SocketClient, ref pos))
-                {
-                    await HandleResult(context, await CommandService.ExecuteAsync(context, pos, ServiceProvider)).ConfigureAwait(false);
-                }
-                else
-                {
-                    foreach (var result in await ListenerService.ExecuteAsync(context, ServiceProvider))
-                    {
-                        await HandleResult(context, result, false).ConfigureAwait(false);
-                    }
-                }
-            }
-        }
-        /// <summary>Builds the service provider.</summary>
-        public virtual IServiceProvider BuildServices(IServiceCollection collection, params object[] dependencies)
-        {
-            collection = collection ?? new ServiceCollection();
-
-            foreach (var dependency in dependencies)
-            {
-                collection.AddSingleton(dependency.GetType(), dependency);
-            }
-
-            return collection.BuildServiceProvider();
         }
 
         /// <summary>Marks the specified service as ready to disconnect</summary>
