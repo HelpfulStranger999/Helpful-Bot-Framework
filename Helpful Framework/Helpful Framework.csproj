@@ -31,9 +31,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00950" />
-    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00950" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00950" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.0-beta2-00953" />
+    <PackageReference Include="Discord.Net.Core" Version="2.0.0-beta2-00953" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.0-beta2-00953" />
     <PackageReference Include="HelpfulUtilities" Version="1.2.2-alpha" />
     <PackageReference Include="HelpfulUtilities.Discord" Version="1.0.5-beta" />
     <PackageReference Include="HelpfulUtilities.Discord.Commands" Version="1.1.0-alpha" />
