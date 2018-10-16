@@ -23,5 +23,7 @@
         ulong EarlyBirdPotVariance { get; set; }
         /// <summary>How many users qualify for the <see cref="EarlyBirdPot"/></summary>
         ulong EarlyBirdPotSize { get; set; }
+        /// <summary>Whether bots can get an early bird pot bonus</summary>
+        bool BotEarlyBirdBot { get; set; }
     }
 }

@@ -105,11 +105,12 @@ namespace Helpful.Framework.Services
 
         /// <summary>Generates a random amount based on the <see cref="ISnacksChannelConfig"/> 
         /// and <see cref="SnackEventManager{TEnum}"/> passed.</summary>
-        public virtual ulong GenerateAmount(ISnacksChannelConfig config, SnackEventManager<TEnum> manager)
+        public virtual ulong GenerateAmount(ISnacksChannelConfig config, SnackEventManager<TEnum> manager, bool isBot = false)
         {
             var amount = Random.Next(1, config.Amount + 1);
             var snackers = manager.Users.LongCount();
 
+            if (isBot && !config.BotEarlyBirdBot) return amount;
             if (snackers < (long)config.EarlyBirdPotSize)
             {
                 var addition = (ulong)Math.Floor((double)manager.Pot / 2);
