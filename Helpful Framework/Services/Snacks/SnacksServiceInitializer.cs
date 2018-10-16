@@ -110,7 +110,7 @@ namespace Helpful.Framework.Services
             var amount = Random.Next(1, config.Amount + 1);
             var snackers = manager.Users.LongCount();
 
-            if (isBot && !config.BotEarlyBirdBot) return amount;
+            if (isBot && !config.BotEarlyBirdPot) return amount;
             if (snackers < (long)config.EarlyBirdPotSize)
             {
                 var addition = (ulong)Math.Floor((double)manager.Pot / 2);
