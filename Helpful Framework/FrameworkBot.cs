@@ -1,21 +1,18 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Helpful.Framework.Config;
+using HelpfulUtilities.Discord.Commands.Readers;
 using HelpfulUtilities.Discord.Listeners;
 using HelpfulUtilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using HelpfulUtilities.Discord.Commands.Readers;
-using System.Reflection;
-using Helpful.Framework.Config;
-using HelpfulUtilities.Discord.Commands.Extensions;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
-using Helpful.Framework.Services;
-using HelpfulUtilities.Discord.Extensions;
+using System.Threading.Tasks;
 
 namespace Helpful.Framework
 {

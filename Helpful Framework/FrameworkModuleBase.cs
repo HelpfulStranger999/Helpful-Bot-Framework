@@ -1,11 +1,11 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using Discord;
-using System.Threading.Tasks;
 using HelpfulUtilities.Discord.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Helpful.Framework
 {

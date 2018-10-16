@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
-using System;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Helpful.Framework
 {
