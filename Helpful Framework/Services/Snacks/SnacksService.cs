@@ -164,7 +164,7 @@ namespace Helpful.Framework.Services
                     var snacksConfig = config.Guilds[message.GetGuild().Id].Snacks[message.Channel.Id];
                     var amount = GenerateAmount(snacksConfig, manager, message.Author.IsBot);
                     if (!config.Users.TryGetValue(message.Author.Id, out var user))
-                        await config.Create(message.Author).ConfigureAwait(false);
+                        user = await config.Create(message.Author).ConfigureAwait(false);
 
                     var snack = GetSnack(message.Channel.Id);
                     if (user.Snacks.ContainsKey(snack))
