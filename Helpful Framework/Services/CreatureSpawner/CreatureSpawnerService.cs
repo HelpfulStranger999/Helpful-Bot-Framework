@@ -120,7 +120,7 @@ namespace Helpful.Framework.Services
                 var user = guild?.GetUser(cuser.Id) ?? bot.SocketClient.GetUser(cuser.Id);
                 builder.AddField(new EmbedFieldBuilder
                 {
-                    Name = $"#{position} {(user as IGuildUser)?.Nickname ?? user.Username}",
+                    Name = $"#{position} {((user as IGuildUser)?.Nickname ?? user?.Username) ?? "Unknown User"}",
                     Value = fieldFunc(cuser, user),
                     IsInline = false
                 });
