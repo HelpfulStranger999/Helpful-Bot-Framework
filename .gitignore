@@ -5,10 +5,6 @@
 
 Services/Administrative/MuteService/*
 
-# Custom
-*.sln
-*.csproj
-
 # User-specific files
 *.suo
 *.user
@@ -328,4 +324,3 @@ ASALocalRun/
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
-/Helpful Framework
