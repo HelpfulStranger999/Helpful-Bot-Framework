@@ -105,9 +105,9 @@ namespace Helpful.Framework.Services
             LeaderboardScale scale = LeaderboardScale.Global, EmbedBuilder builder = null, int size = 10,
             Func<TUser, SocketUser, string> fieldFunc = null, Func<EmbedBuilder, EmbedBuilder> formatEmbedFunc = null)
         {
-            builder = builder ?? new EmbedBuilder();
-            fieldFunc = fieldFunc ?? ((configUser, _) => $"{configUser.Creatures} creatures");
-            formatEmbedFunc = formatEmbedFunc ?? (embed => embed);
+            builder ??= new EmbedBuilder();
+            fieldFunc ??= ((configUser, _) => $"{configUser.Creatures} creatures");
+            formatEmbedFunc ??= (embed => embed);
 
             var orderedLeaderboard = config.Users.Values.OrderByDescending(u => u.Creatures);
             var leaderboard = (scale == LeaderboardScale.Server && guild != null) ?
@@ -133,7 +133,7 @@ namespace Helpful.Framework.Services
         public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Bot = bot;
-            return Spawner.LongCount() <= 0;
+            return Spawner.IsEmpty;
         }
 
         /// <inheritdoc />

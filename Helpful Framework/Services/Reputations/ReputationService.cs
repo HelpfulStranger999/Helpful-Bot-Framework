@@ -89,7 +89,7 @@ namespace Helpful.Framework.Services
         protected internal void UpdateUser(ulong id, DateTimeOffset reputation)
         {
             var reps = Reputations[id];
-            for (var i = 0; i < reps.Count(); i++)
+            for (var i = 0; i < reps.Length; i++)
             {
                 var rep = reps[i];
                 if (reputation >= rep)

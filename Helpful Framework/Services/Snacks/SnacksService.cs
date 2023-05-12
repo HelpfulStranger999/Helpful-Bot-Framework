@@ -79,7 +79,7 @@ namespace Helpful.Framework.Services
         public async Task StopEvent(ITextChannel channel)
         {
             if (!Managers.TryGetValue(channel.Id, out var manager)) return;
-            await channel.SendMessageAsync(manager.Users.Count() > 0 ?
+            await channel.SendMessageAsync(manager.Users.Count > 0 ?
                 Departure(manager.Snack) : NoPeople(manager.Snack)).ConfigureAwait(false);
 
             manager.Reset();
@@ -224,9 +224,9 @@ namespace Helpful.Framework.Services
             LeaderboardScale scale = LeaderboardScale.Global, EmbedBuilder builder = null, int size = 10,
             Func<TUser, SocketUser, string> fieldFunc = null, Func<EmbedBuilder, EmbedBuilder> formatEmbedFunc = null)
         {
-            builder = builder ?? new EmbedBuilder();
-            fieldFunc = fieldFunc ?? ((configUser, _) => $"{(ulong)configUser.Snacks.Sum(s => (double)s.Value)} snacks");
-            formatEmbedFunc = formatEmbedFunc ?? (embed => embed);
+            builder ??= new EmbedBuilder();
+            fieldFunc ??= ((configUser, _) => $"{(ulong)configUser.Snacks.Sum(s => (double)s.Value)} snacks");
+            formatEmbedFunc ??= (embed => embed);
 
             var orderedLeaderboard = config.Users.Values.OrderByDescending(u => u.Snacks.Sum(s => (double)s.Value));
             var leaderboard = (scale == LeaderboardScale.Server && guild != null) ?
@@ -252,7 +252,7 @@ namespace Helpful.Framework.Services
         public bool CanDisconnect(FrameworkBot<TConfig, TGuild, TUser, TCommandContext> bot)
         {
             Bot = bot;
-            return Managers.Values.LongCount(m => m.IsActive) <= 0;
+            return !Managers.Values.Any(m => m.IsActive);
         }
 
         /// <inheritdoc />

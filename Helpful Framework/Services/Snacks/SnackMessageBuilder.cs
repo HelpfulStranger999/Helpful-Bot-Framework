@@ -8,7 +8,7 @@ namespace Helpful.Framework.Services
     public class SnackMessageBuilder<TEnum> where TEnum : Enum
     {
         /// <summary>Default instance of <see cref="SnackMessageBuilder{TEnum}"/></summary>
-        public static SnackMessageBuilder<TEnum> Instance = new SnackMessageBuilder<TEnum>().WithDefaults();
+        public static SnackMessageBuilder<TEnum> Instance { get; } = new SnackMessageBuilder<TEnum>().WithDefaults();
 
         /// <summary>A map of the snack type to the snacks name.</summary>
         public Dictionary<TEnum, string> Names { get; set; } = new Dictionary<TEnum, string>();

@@ -47,7 +47,7 @@ namespace Helpful.Framework.Services
         /// <summary>Instantiates a new SnackService with optional <see cref="SnackMessageBuilder{TEnum}"/></summary>
         public SnacksService(SnackMessageBuilder<TEnum> snackMessages = null)
         {
-            snackMessages = snackMessages ?? SnackMessageBuilder<TEnum>.Instance;
+            snackMessages ??= SnackMessageBuilder<TEnum>.Instance;
 
             Names = snackMessages.Names;
             Faces = snackMessages.Faces;
@@ -108,7 +108,7 @@ namespace Helpful.Framework.Services
         public virtual ulong GenerateAmount(ISnacksChannelConfig config, SnackEventManager<TEnum> manager, bool isBot = false)
         {
             var amount = Random.Next(1, config.Amount + 1);
-            var snackers = manager.Users.LongCount();
+            var snackers = manager.Users.Count;
 
             if (isBot && !config.BotEarlyBirdPot) return amount;
             if (snackers < (long)config.EarlyBirdPotSize)

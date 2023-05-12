@@ -143,7 +143,7 @@ namespace Helpful.Framework
         /// </summary>
         protected async Task StopInternalAsync(bool graceful, TimeSpan? timeout)
         {
-            timeout = timeout ?? Timeout.InfiniteTimeSpan;
+            timeout ??= Timeout.InfiniteTimeSpan;
             if (graceful)
             {
                 Parallel.ForEach(ServiceList, service =>
@@ -155,7 +155,7 @@ namespace Helpful.Framework
                     Task.FromResult(DisconnectList[type]))), Task.Delay(timeout.Value)).ConfigureAwait(false);
             }
 
-            if (ServiceList.LongCount() >= 0)
+            if (ServiceList.Count >= 0)
             {
                 await Task.WhenAny(Task.WhenAll(ServiceList.Select(service =>
                     Task.Run(() => service.Disconnect(this)))), Task.Delay(timeout.Value)).ConfigureAwait(false);
